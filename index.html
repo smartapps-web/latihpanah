@@ -1,0 +1,3394 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#070c16">
+<title>PanahLatih — Catatan Latihan Panahan</title>
+<style>
+:root{
+  --bg:#070c16;
+  --card:#101b2d;
+  --card-2:#0c1524;
+  --line:rgba(148,163,184,.16);
+  --line-strong:rgba(148,163,184,.3);
+  --text:#e9eef8;
+  --muted:#93a4bd;
+  --amber:#f5a524;
+  --amber-2:#fbbf24;
+  --amber-soft:rgba(245,165,36,.12);
+  --green:#34d399;
+  --red:#f87171;
+  --blue:#60a5fa;
+  --violet:#a78bfa;
+  --radius:18px;
+  --shadow:0 18px 40px -18px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;min-height:100vh;color:var(--text);
+  font-family:"Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+  background:var(--bg);-webkit-font-smoothing:antialiased;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(900px 620px at 88% -12%,rgba(245,165,36,.13),transparent 60%),
+    radial-gradient(820px 620px at -12% 8%,rgba(59,130,246,.1),transparent 55%);
+}
+#app{position:relative;z-index:1}
+h1,h2,h3,h4,p{margin-top:0}
+button{font-family:inherit}
+a{color:var(--amber-2)}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:rgba(148,163,184,.22);border-radius:10px}
+
+/* ---------- shared ---------- */
+.card{
+  background:linear-gradient(180deg,rgba(19,31,50,.92),rgba(12,21,36,.94));
+  border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);
+}
+.muted{color:var(--muted)}
+.eyebrow{font-size:11.5px;font-weight:800;letter-spacing:1.3px;text-transform:uppercase;color:var(--amber)}
+.brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.brand-badge{
+  width:40px;height:40px;border-radius:13px;display:grid;place-items:center;font-size:21px;
+  background:linear-gradient(135deg,#fbbf24,#b45309);
+  box-shadow:0 8px 24px -8px rgba(245,165,36,.7);
+}
+.brand-name{font-weight:800;font-size:16px;letter-spacing:.2px}
+.brand-sub{font-size:11px;color:var(--muted);margin-top:1px}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  border:1px solid transparent;border-radius:11px;padding:11px 18px;
+  font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;
+  transition:filter .15s,background .15s,border-color .15s,transform .1s;
+}
+.btn:active{transform:translateY(1px)}
+.btn-primary{
+  background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#20160a;
+  box-shadow:0 10px 26px -12px rgba(245,165,36,.9);
+}
+.btn-primary:hover{filter:brightness(1.07)}
+.btn-ghost{background:rgba(148,163,184,.06);border-color:var(--line-strong);color:var(--text)}
+.btn-ghost:hover{background:rgba(148,163,184,.13)}
+.btn-soft{background:var(--amber-soft);border-color:rgba(245,165,36,.3);color:var(--amber-2)}
+.btn-soft:hover{background:rgba(245,165,36,.18)}
+.btn-danger{background:rgba(248,113,113,.12);border-color:rgba(248,113,113,.35);color:#fca5a5}
+.btn-danger:hover{background:rgba(248,113,113,.2)}
+.btn-sm{padding:8px 13px;font-size:13px;border-radius:9px}
+.btn-xs{padding:6px 10px;font-size:12px;border-radius:8px}
+.btn-block{width:100%}
+.icon-btn{
+  width:36px;height:36px;border-radius:10px;display:grid;place-items:center;
+  background:rgba(148,163,184,.06);border:1px solid var(--line);
+  color:var(--muted);cursor:pointer;font-size:15px;transition:.15s;
+}
+.icon-btn:hover{color:var(--text);background:rgba(148,163,184,.13)}
+.link-btn{background:none;border:none;color:var(--amber);font-weight:700;cursor:pointer;font-size:13px;padding:4px}
+.link-btn:hover{color:var(--amber-2)}
+
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:12.5px;font-weight:600;color:#b9c6da}
+.unit{color:var(--muted);font-weight:500}
+input,select,textarea{
+  width:100%;background:rgba(7,12,22,.65);border:1px solid var(--line-strong);
+  border-radius:10px;padding:10px 12px;color:var(--text);font:inherit;font-size:14px;
+  outline:none;transition:border-color .15s,box-shadow .15s;
+}
+input[type="date"]{color-scheme:dark}
+input:focus,select:focus,textarea:focus{
+  border-color:var(--amber);box-shadow:0 0 0 3px rgba(245,165,36,.15);
+}
+input:disabled{opacity:.45;cursor:not-allowed}
+textarea{resize:vertical;min-height:44px}
+.stack{display:flex;flex-direction:column;gap:14px}
+.form-error{
+  background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.35);
+  color:#fca5a5;padding:10px 12px;border-radius:10px;font-size:13px;
+}
+.form-hint{font-size:12px;color:var(--muted);line-height:1.5}
+.form-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
+.form-actions .btn-ghost{margin-right:auto}
+.empty{
+  text-align:center;padding:44px 22px;border:1px dashed var(--line-strong);
+  border-radius:var(--radius);color:var(--muted);background:rgba(148,163,184,.03);
+}
+.empty-icon{font-size:34px;margin-bottom:8px}
+.empty h3{margin:0 0 6px;color:var(--text);font-size:16px}
+.empty p{margin:0;font-size:13px;line-height:1.55}
+.back{
+  background:none;border:none;color:var(--muted);font-size:13.5px;font-weight:600;
+  cursor:pointer;padding:0;margin-bottom:18px;display:inline-flex;align-items:center;gap:6px;
+}
+.back:hover{color:var(--amber-2)}
+
+/* ---------- auth ---------- */
+.auth-wrap{min-height:100vh;display:grid;grid-template-columns:1.05fr .95fr}
+.auth-hero{
+  padding:56px clamp(28px,6vw,80px);display:flex;flex-direction:column;
+  justify-content:center;gap:34px;border-right:1px solid var(--line);
+  position:relative;overflow:hidden;
+}
+.auth-hero::after{
+  content:"🏹";position:absolute;font-size:300px;opacity:.045;
+  right:-60px;bottom:-60px;transform:rotate(-15deg);pointer-events:none;
+}
+.auth-hero .brand{margin-bottom:6px}
+.hero-title{font-size:clamp(30px,4vw,46px);line-height:1.08;letter-spacing:-1px;margin:0 0 16px}
+.hero-title span{color:var(--amber-2)}
+.hero-sub{color:var(--muted);font-size:15px;max-width:430px;line-height:1.65;margin:0}
+.hero-list{display:flex;flex-direction:column;gap:12px;margin:0;padding:0;list-style:none;position:relative;z-index:1}
+.hero-list li{display:flex;gap:11px;align-items:center;color:#c9d5e6;font-size:14px}
+.hero-list .dot{
+  width:22px;height:22px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;
+  background:var(--amber-soft);border:1px solid rgba(245,165,36,.35);color:var(--amber-2);
+  font-size:11px;font-weight:800;
+}
+.auth-panel{
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  padding:40px 24px;gap:16px;
+}
+.auth-card{width:min(440px,100%);padding:28px;position:relative;z-index:1}
+.auth-mobile-brand{display:none;margin-bottom:20px}
+.auth-title{margin:0 0 6px;font-size:23px;letter-spacing:-.3px}
+.auth-sub{margin:0 0 20px;color:var(--muted);font-size:13.5px;line-height:1.55}
+.auth-foot{max-width:440px;text-align:center;color:var(--muted);font-size:11.5px;line-height:1.6;margin:0}
+.setup-badge{
+  display:inline-block;font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;
+  color:var(--amber-2);background:var(--amber-soft);border:1px solid rgba(245,165,36,.3);
+  padding:4px 10px;border-radius:999px;margin-bottom:12px;
+}
+.tabs{
+  display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;margin-bottom:20px;
+  background:rgba(7,12,22,.6);border:1px solid var(--line);border-radius:12px;
+}
+.tab{
+  padding:9px;border-radius:9px;border:none;background:transparent;color:var(--muted);
+  font-weight:700;font-size:13.5px;cursor:pointer;transition:.15s;
+}
+.tab.active{background:rgba(245,165,36,.14);color:var(--amber-2);box-shadow:inset 0 0 0 1px rgba(245,165,36,.25)}
+
+/* ---------- shell ---------- */
+.shell{min-height:100vh;display:flex;flex-direction:column}
+.topbar{
+  position:sticky;top:0;z-index:30;backdrop-filter:blur(16px);
+  background:rgba(7,12,22,.84);border-bottom:1px solid var(--line);
+}
+.topbar-inner{max-width:1180px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:18px}
+.nav{display:flex;gap:4px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+.nav::-webkit-scrollbar{display:none}
+.nav-btn{
+  padding:9px 14px;border-radius:10px;background:transparent;border:none;color:var(--muted);
+  font-weight:700;font-size:14px;cursor:pointer;white-space:nowrap;transition:.15s;
+}
+.nav-btn:hover{color:var(--text);background:rgba(148,163,184,.08)}
+.nav-btn.active{
+  color:#0b1220;background:linear-gradient(135deg,#fbbf24,#f59e0b);
+  box-shadow:0 6px 18px -8px rgba(245,165,36,.8);
+}
+.topbar-right{display:flex;align-items:center;gap:10px;margin-left:auto;flex-shrink:0}
+.userchip{
+  display:flex;align-items:center;gap:9px;padding:5px 11px 5px 5px;
+  border:1px solid var(--line);border-radius:999px;background:rgba(148,163,184,.05);
+}
+.avatar{
+  width:32px;height:32px;border-radius:50%;display:grid;place-items:center;flex-shrink:0;
+  font-weight:800;font-size:12px;color:#1a1206;
+  background:linear-gradient(135deg,#fbbf24,#f59e0b);
+}
+.avatar.lg{width:48px;height:48px;font-size:16px}
+.avatar.xl{width:64px;height:64px;font-size:22px}
+.userchip-text{display:flex;flex-direction:column;line-height:1.15;min-width:0}
+.userchip-name{font-size:13px;font-weight:700;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.role-badge{font-size:9.5px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--amber)}
+.role-badge.athlete{color:var(--green)}
+.sync-pill{
+  display:inline-flex;align-items:center;gap:7px;padding:6px 10px;border-radius:999px;
+  border:1px solid var(--line);background:rgba(148,163,184,.06);color:var(--muted);
+  font:inherit;font-size:11.5px;font-weight:700;cursor:pointer;white-space:nowrap;transition:.15s;
+}
+.sync-pill:hover{background:rgba(148,163,184,.12)}
+.sync-dot{width:7px;height:7px;border-radius:50%;background:var(--muted);flex-shrink:0}
+.sync-pill.synced{color:var(--green);border-color:rgba(52,211,153,.32);background:rgba(52,211,153,.09)}
+.sync-pill.synced .sync-dot{background:var(--green)}
+.sync-pill.syncing,.sync-pill.connecting{color:var(--amber-2);border-color:rgba(245,165,36,.32);background:var(--amber-soft)}
+.sync-pill.syncing .sync-dot,.sync-pill.connecting .sync-dot{background:var(--amber-2);animation:syncPulse 1s ease-in-out infinite}
+.sync-pill.error{color:var(--red);border-color:rgba(248,113,113,.32);background:rgba(248,113,113,.09)}
+.sync-pill.error .sync-dot{background:var(--red)}
+@keyframes syncPulse{0%,100%{opacity:1}50%{opacity:.3}}
+@media (max-width:760px){ .sync-pill .sync-label{display:none} .sync-pill{padding:7px} }
+.main{max-width:1180px;width:100%;margin:0 auto;padding:30px 20px 90px;flex:1}
+.page-head{display:flex;align-items:flex-end;justify-content:space-between;gap:18px;margin-bottom:26px;flex-wrap:wrap}
+.page-head h1{margin:2px 0 6px;font-size:clamp(24px,3.2vw,34px);letter-spacing:-.6px}
+.page-head p{margin:0;font-size:13.5px}
+
+/* ---------- dashboard ---------- */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:32px}
+.stat{
+  display:flex;gap:14px;align-items:center;padding:18px;border-radius:var(--radius);
+  background:linear-gradient(180deg,rgba(19,31,50,.9),rgba(12,21,36,.92));
+  border:1px solid var(--line);
+}
+.stat-icon{
+  width:46px;height:46px;border-radius:13px;display:grid;place-items:center;font-size:21px;
+  background:var(--amber-soft);border:1px solid rgba(245,165,36,.25);flex-shrink:0;
+}
+.stat-icon.green{background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.28)}
+.stat-icon.blue{background:rgba(96,165,250,.1);border-color:rgba(96,165,250,.28)}
+.stat-icon.violet{background:rgba(167,139,250,.1);border-color:rgba(167,139,250,.28)}
+.stat-value{font-size:26px;font-weight:800;line-height:1}
+.stat-label{font-size:12px;color:var(--muted);margin-top:5px}
+.section{margin-bottom:34px}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.section-head h2{font-size:18px;margin:0;letter-spacing:-.2px}
+.hero-cta{
+  display:flex;align-items:center;justify-content:space-between;gap:18px;
+  padding:24px;margin-bottom:26px;flex-wrap:wrap;
+  background:linear-gradient(120deg,rgba(245,165,36,.16),rgba(19,31,50,.9) 55%);
+  border:1px solid rgba(245,165,36,.28);
+}
+.hero-cta h2{margin:4px 0 6px;font-size:22px;letter-spacing:-.3px}
+.hero-cta p{margin:0;font-size:13.5px}
+
+/* ---------- session cards ---------- */
+.session-list{display:flex;flex-direction:column;gap:12px}
+.session-card{padding:16px;cursor:pointer;transition:border-color .15s,transform .15s}
+.session-card:hover{border-color:rgba(245,165,36,.42);transform:translateY(-1px)}
+.session-head{display:flex;gap:14px;align-items:center}
+.date-chip{
+  width:48px;height:52px;border-radius:12px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;flex-shrink:0;
+  background:rgba(245,165,36,.1);border:1px solid rgba(245,165,36,.25);
+}
+.date-day{font-size:19px;font-weight:800;line-height:1;color:var(--amber-2)}
+.date-mon{font-size:9.5px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-top:3px}
+.session-title{min-width:0;flex:1}
+.session-athlete{font-weight:800;font-size:15px;margin-bottom:2px}
+.session-date{font-size:12.5px;color:var(--muted)}
+.session-meta{display:flex;align-items:center;gap:8px}
+.pill{font-size:11.5px;padding:3px 8px;border-radius:999px;background:rgba(148,163,184,.1);color:#c7d2e3}
+.comment-pill{background:rgba(96,165,250,.13);color:#93c5fd;border:1px solid rgba(96,165,250,.22)}
+.chev{font-size:22px;color:var(--muted);line-height:1}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.chip{
+  font-size:12px;padding:5px 9px;border-radius:8px;color:#c7d2e3;
+  background:rgba(148,163,184,.08);border:1px solid var(--line);
+}
+.chip strong{color:var(--text)}
+.session-note{
+  margin:10px 0 0;font-size:12.5px;color:var(--muted);line-height:1.5;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.card-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:12px}
+
+/* ---------- athlete cards ---------- */
+.athlete-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.athlete-card{padding:18px;cursor:pointer;transition:border-color .15s,transform .15s}
+.athlete-card:hover{border-color:rgba(245,165,36,.42);transform:translateY(-1px)}
+.athlete-top{display:flex;align-items:center;gap:12px}
+.athlete-name{font-weight:800;font-size:15.5px;margin-bottom:2px}
+.athlete-user{font-size:12.5px;color:var(--muted)}
+.athlete-stats{display:flex;gap:16px;margin-top:14px;font-size:12.5px;color:var(--muted)}
+.athlete-stats strong{color:var(--text);font-size:14px;margin-right:2px}
+.athlete-last{margin-top:10px;font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+
+/* ---------- targets ---------- */
+.target-card{padding:18px}
+.target-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.target-head h3{margin:0 0 4px;font-size:16px}
+.target-head p{margin:0;font-size:12.5px}
+.target-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px;margin-top:14px}
+.target-item{
+  display:flex;gap:10px;padding:11px 12px;border-radius:11px;align-items:center;
+  background:rgba(148,163,184,.05);border:1px solid var(--line);
+}
+.t-icon{font-size:18px;flex-shrink:0}
+.t-main{flex:1;min-width:0}
+.t-name{font-size:11.5px;color:var(--muted)}
+.t-val{font-weight:700;font-size:13.5px;margin-top:1px}
+.tag{
+  font-size:10.5px;padding:2px 7px;border-radius:999px;white-space:nowrap;
+  background:rgba(148,163,184,.1);color:var(--muted);
+}
+.tag.ok{background:rgba(52,211,153,.13);color:var(--green)}
+.tag.no{background:rgba(248,113,113,.12);color:#fca5a5}
+.tag.warn{background:rgba(245,165,36,.14);color:var(--amber-2)}
+.history-card{padding:15px}
+.history-card .chips{margin-top:10px}
+.target-form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-bottom:14px}
+.target-group{padding:12px;border:1px solid var(--line);border-radius:12px;background:rgba(148,163,184,.04)}
+.target-group-head{font-weight:700;font-size:13.5px;margin-bottom:10px}
+.target-inputs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+
+/* ---------- quota & attendance ---------- */
+.activity-hint{margin:0;font-size:11.5px;color:var(--muted);grid-column:1/-1}
+.quota-card{padding:18px}
+.quota-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.quota-head h3{margin:0 0 4px;font-size:16px}
+.quota-head p{margin:0;font-size:12.5px}
+.quota-num{display:flex;align-items:baseline;gap:7px;margin:16px 0 4px}
+.quota-num strong{font-size:40px;line-height:1;letter-spacing:-1.5px}
+.quota-num span{font-size:13px;color:var(--muted)}
+.quota-bar{height:8px;border-radius:999px;background:rgba(148,163,184,.14);overflow:hidden;margin:10px 0 12px}
+.quota-bar > i{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,#fbbf24,#f59e0b);transition:width .25s}
+.quota-bar.low > i{background:linear-gradient(90deg,#f87171,#f59e0b)}
+.quota-facts{display:flex;gap:8px 18px;flex-wrap:wrap;font-size:12.5px;color:var(--muted)}
+.quota-facts strong{color:var(--text)}
+.quota-actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.quota-alert{
+  padding:14px 16px;margin-bottom:22px;font-size:13px;line-height:1.55;
+  background:rgba(245,165,36,.08);border:1px solid rgba(245,165,36,.3);
+}
+.quota-alert strong{color:var(--amber-2)}
+.att-list{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.att-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;background:rgba(148,163,184,.05);border:1px solid var(--line);font-size:12.5px}
+.att-icon{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;flex-shrink:0;background:rgba(52,211,153,.12);color:var(--green);font-size:13px}
+.att-main{flex:1;min-width:0}
+.att-title{font-weight:700;color:var(--text);font-size:13px}
+.att-sub{color:var(--muted);font-size:11.5px;margin-top:2px;overflow-wrap:anywhere}
+.att-row .btn{padding:5px 9px;font-size:11.5px;border-radius:7px;flex-shrink:0}
+.package-presets{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.package-presets .btn{padding:6px 11px;font-size:12px;border-radius:8px}
+.profile-rows{margin-top:6px}
+.profile-rows .kv:first-child{border-top:none;padding-top:0}
+.form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* ---------- session form ---------- */
+.activity-list{display:flex;flex-direction:column;gap:12px;margin-bottom:16px}
+.activity{padding:0;overflow:hidden;transition:border-color .15s,background .15s}
+.activity-head{display:flex;align-items:center;gap:12px;padding:15px 16px;cursor:pointer;user-select:none}
+.activity-head input[type="checkbox"]{width:20px;height:20px;accent-color:var(--amber);cursor:pointer;flex-shrink:0}
+.activity-icon{font-size:20px}
+.activity-name{font-weight:700;font-size:15px;flex:1}
+.activity-check{
+  width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line-strong);
+  display:grid;place-items:center;font-size:12px;color:transparent;transition:.15s;
+}
+.activity.active .activity-check{background:var(--amber);border-color:var(--amber);color:#1a1206}
+.activity.active{border-color:rgba(245,165,36,.45);background:linear-gradient(180deg,rgba(245,165,36,.07),rgba(245,165,36,.015))}
+.activity-fields{display:none;padding:0 16px 16px;gap:14px;grid-template-columns:1fr 1fr}
+.activity.active .activity-fields{display:grid}
+
+/* ---------- filters ---------- */
+.filters{
+  display:grid;grid-template-columns:1.2fr 1fr 1fr auto;gap:12px;align-items:end;
+  padding:16px;margin-bottom:20px;
+}
+.filter-actions{display:flex;gap:8px}
+
+/* ---------- profile ---------- */
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.profile-card{display:flex;align-items:center;gap:16px;margin-bottom:18px}
+.profile-card h2{margin:0 0 2px;font-size:20px}
+.profile-card .role-badge{display:inline-block;margin-top:5px}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+.kv strong{color:var(--text);text-align:right}
+.profile-card .card{padding:0}
+.card-pad{padding:20px}
+.card-pad h3{margin:0 0 4px;font-size:16px}
+.card-pad > p{margin:0 0 14px;font-size:12.5px}
+.app-info{font-size:12.5px;color:var(--muted);line-height:1.65;padding:18px}
+.app-info strong{color:var(--text)}
+
+/* ---------- modal ---------- */
+body.modal-open{overflow:hidden}
+.overlay{
+  position:fixed;inset:0;z-index:100;background:rgba(3,7,14,.8);
+  backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;
+  padding:18px;overflow-y:auto;animation:fade .15s ease;
+}
+.modal{
+  width:min(640px,100%);max-height:calc(100vh - 36px);overflow-y:auto;
+  padding:22px;animation:pop .18s ease;margin:auto;
+}
+@keyframes fade{from{opacity:0}}
+@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.985)}}
+.modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:18px}
+.modal-head h2{margin:2px 0 0;font-size:21px;letter-spacing:-.3px}
+.detail-list{display:flex;flex-direction:column;gap:10px}
+.detail-row{
+  display:flex;gap:12px;padding:12px;border-radius:12px;
+  background:rgba(148,163,184,.05);border:1px solid var(--line);
+}
+.detail-icon{font-size:19px;flex-shrink:0}
+.detail-main{flex:1;min-width:0}
+.detail-name{font-weight:700;font-size:14px}
+.detail-vals{display:flex;gap:12px;flex-wrap:wrap;margin-top:3px}
+.detail-val{font-weight:800;color:var(--amber-2);font-size:15px}
+.detail-val small{font-weight:500;color:var(--muted);font-size:11px}
+.cmp-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.cmp{font-size:11px;padding:2px 7px;border-radius:6px}
+.cmp.ok{background:rgba(52,211,153,.12);color:var(--green)}
+.cmp.no{background:rgba(148,163,184,.1);color:var(--muted)}
+.note-box{
+  margin-top:14px;padding:12px 14px;border-radius:12px;font-size:13.5px;
+  background:rgba(96,165,250,.07);border:1px solid rgba(96,165,250,.2);
+}
+.note-box p{margin:4px 0 0;color:#c9d5e6;line-height:1.55;white-space:pre-wrap}
+.comments{margin-top:20px;border-top:1px solid var(--line);padding-top:16px}
+.comments h3{margin:0 0 10px;font-size:15px}
+.comment{display:flex;gap:10px;padding:10px 0;border-bottom:1px dashed var(--line)}
+.comment:last-of-type{border-bottom:none}
+.comment-body{flex:1;min-width:0}
+.comment-top{display:flex;justify-content:space-between;gap:8px;font-size:12px}
+.comment-name{font-weight:700;color:var(--amber-2)}
+.comment-time{color:var(--muted);white-space:nowrap}
+.comment-text{margin:4px 0 0;font-size:13.5px;color:#d5deec;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere}
+.comment-form{display:flex;gap:8px;margin-top:12px;align-items:flex-end}
+.comment-form textarea{flex:1}
+.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:20px;flex-wrap:wrap}
+.modal-actions .btn-ghost{margin-right:auto}
+
+/* ---------- toast ---------- */
+#toast-root{
+  position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:200;
+  display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;width:min(92vw,420px);
+}
+.toast{
+  background:rgba(17,27,45,.97);border:1px solid rgba(52,211,153,.35);color:#d7f7ea;
+  padding:11px 18px;border-radius:12px;font-size:13.5px;font-weight:600;
+  box-shadow:var(--shadow);animation:toastIn .2s ease;text-align:center;
+}
+@keyframes toastIn{from{opacity:0;transform:translateY(10px)}}
+
+/* ---------- responsive ---------- */
+@media(max-width:900px){
+  .auth-wrap{grid-template-columns:1fr}
+  .auth-hero{display:none}
+  .auth-mobile-brand{display:flex}
+  .auth-panel{padding:30px 18px}
+  .auth-card{padding:24px}
+}
+@media(max-width:880px){
+  .topbar-inner{flex-wrap:wrap;gap:10px;padding:10px 14px}
+  .nav{order:3;width:100%;margin-left:0;justify-content:flex-start;border-top:1px solid var(--line);padding-top:8px}
+  .nav-btn{padding:8px 11px;font-size:13px}
+  .topbar-right{margin-left:auto}
+  .brand-sub{display:none}
+  .userchip-text{display:none}
+  .userchip{padding:4px}
+  .main{padding:22px 14px 90px}
+  .activity-fields{grid-template-columns:1fr}
+  .target-inputs{grid-template-columns:1fr}
+  .filters{grid-template-columns:1fr 1fr}
+  .filter-actions{grid-column:1/-1}
+}
+@media(max-width:560px){
+  .stats{grid-template-columns:1fr 1fr;gap:10px}
+  .stat{padding:14px;gap:10px}
+  .stat-icon{width:38px;height:38px;font-size:17px}
+  .stat-value{font-size:21px}
+  .stat-label{font-size:10.5px}
+  .form-grid-2{grid-template-columns:1fr}
+  .session-card{padding:13px}
+  .session-head{gap:10px}
+  .date-chip{width:43px;height:48px}
+  .chip{font-size:11px}
+  .page-head{margin-bottom:20px}
+  .hero-cta{padding:18px}
+  .modal{padding:18px;max-height:calc(100vh - 20px)}
+  .overlay{padding:10px}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="modal-root"></div>
+<div id="toast-root"></div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+'use strict';
+
+/* ================= data layer ================= */
+const LS = {
+  users: 'panahlatih_users_v1',
+  sessions: 'panahlatih_sessions_v1',
+  comments: 'panahlatih_comments_v1',
+  targets: 'panahlatih_targets_v1',
+  packages: 'panahlatih_packages_v1',
+  attendance: 'panahlatih_attendance_v1',
+  auth: 'panahlatih_auth_v1',
+  cloudWs: 'panahlatih_cloud_ws_v1'
+};
+
+const ACTIVITIES = [
+  { key: 'archery', icon: '🎯', name: 'Memanah', fields: [
+    { key: 'arrows', label: 'Jumlah anak panah', unit: 'x', step: 1, optional: true },
+    { key: 'hit', label: 'Masuk target', unit: 'x', step: 1, optional: true },
+    { key: 'miss', label: 'Miss', unit: 'x', step: 1, optional: true },
+    { key: 'points', label: 'Poin', unit: 'poin', step: 1, optional: true }
+  ]},
+  { key: 'run', icon: '🏃', name: 'Lari / Joging', fields: [
+    { key: 'minutes', label: 'Durasi', unit: 'menit', step: 1 },
+    { key: 'km', label: 'Jarak', unit: 'km', step: 0.1 }
+  ]},
+  { key: 'plank', icon: '🧘', name: 'Plank', fields: [
+    { key: 'seconds', label: 'Durasi', unit: 'detik', step: 1 }
+  ]},
+  { key: 'lowplank', icon: '📐', name: 'Low Plank', fields: [
+    { key: 'seconds', label: 'Durasi', unit: 'detik', step: 1 }
+  ]},
+  { key: 'sideplank', icon: '↔️', name: 'Side Plank', fields: [
+    { key: 'seconds', label: 'Durasi', unit: 'detik', step: 1 }
+  ]},
+  { key: 'pushup', icon: '💪', name: 'Push-up', fields: [
+    { key: 'reps', label: 'Repetisi', unit: 'x', step: 1 }
+  ]},
+  { key: 'weight', icon: '🏋️', name: 'Angkat Beban', fields: [
+    { key: 'kg', label: 'Beban', unit: 'kg', step: 0.5 },
+    { key: 'reps', label: 'Repetisi', unit: 'x', step: 1 }
+  ]},
+  { key: 'hang', icon: '🧗', name: 'Bergelantungan', fields: [
+    { key: 'seconds', label: 'Durasi', unit: 'detik', step: 1 }
+  ]}
+];
+
+const state = {
+  loginTab: 'login',
+  view: 'home',
+  athleteId: null,
+  sessionDraft: null,
+  modal: null,
+  filters: { athleteId: '', from: '', to: '' }
+};
+
+const appEl = document.getElementById('app');
+const modalRoot = document.getElementById('modal-root');
+const toastRoot = document.getElementById('toast-root');
+
+function read(key, fallback){
+  try {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : fallback;
+  } catch (err) {
+    return fallback;
+  }
+}
+function write(key, value){
+  try { localStorage.setItem(key, JSON.stringify(value)); }
+  catch (err) { console.error('Gagal menyimpan data', err); }
+}
+function saveLocal(name, key, value){
+  const prev = read(key, []);
+  write(key, value);
+  cloudMark(name, prev, value);
+  if (name === 'users') scheduleLookupRefresh();
+}
+const getUsers = () => read(LS.users, []);
+const saveUsers = (v) => saveLocal('users', LS.users, v);
+const getSessions = () => read(LS.sessions, []);
+const saveSessions = (v) => saveLocal('sessions', LS.sessions, v);
+const getComments = () => read(LS.comments, []);
+const saveComments = (v) => saveLocal('comments', LS.comments, v);
+const getTargets = () => read(LS.targets, []);
+const saveTargets = (v) => saveLocal('targets', LS.targets, v);
+const getPackages = () => read(LS.packages, []);
+const savePackages = (v) => saveLocal('packages', LS.packages, v);
+const getAttendance = () => read(LS.attendance, []);
+const saveAttendance = (v) => saveLocal('attendance', LS.attendance, v);
+
+function uid(){
+  if (window.crypto && typeof crypto.randomUUID === 'function') {
+    try { return crypto.randomUUID(); } catch (err) { /* fallback */ }
+  }
+  return 'id-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 9);
+}
+function getUserById(id){ return getUsers().find(u => u.id === id) || null; }
+function currentUser(){
+  const id = localStorage.getItem(LS.auth);
+  return id ? getUserById(id) : null;
+}
+
+/* ================= cloud sync (Firestore) ================= */
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyCTnhPr8dJNt8KHo3pR7-TQLcZ0h-HOOzM",
+  authDomain: "panahlatih.firebaseapp.com",
+  projectId: "panahlatih",
+  storageBucket: "panahlatih.firebasestorage.app",
+  messagingSenderId: "520149913571",
+  appId: "1:520149913571:web:9d57452dcd5682774d5ad6"
+};
+
+const CLOUD_COLLECTIONS = ['users', 'sessions', 'comments', 'targets', 'packages', 'attendance'];
+
+const cloud = {
+  ready: false,
+  started: false,
+  wid: null,
+  db: null,
+  initPromise: null,
+  authPromise: null,
+  unsubs: [],
+  initialized: {},
+  dirty: {},
+  dirtyDel: {},
+  timers: {},
+  pending: 0,
+  status: 'off',
+  message: '',
+  online: true,
+  lastSyncAt: 0,
+  renderPending: false,
+  mergeLocal: false
+};
+
+const CLOUD_STATUS_LABEL = {
+  off: 'Lokal',
+  connecting: 'Menyambung…',
+  syncing: 'Menyinkronkan…',
+  synced: 'Tersinkron',
+  offline: 'Offline',
+  error: 'Gagal sinkron'
+};
+
+function setCloudStatus(status, message){
+  cloud.status = status;
+  if (message !== undefined) cloud.message = message;
+  updateSyncBadge();
+}
+
+function updateSyncBadge(){
+  const el = document.getElementById('sync-badge');
+  if (!el) return;
+  const label = CLOUD_STATUS_LABEL[cloud.status] || 'Lokal';
+  el.className = 'sync-pill ' + cloud.status;
+  el.innerHTML = '<span class="sync-dot"></span><span class="sync-label">' + label + '</span>';
+  el.title = cloud.message || ('Status sinkronisasi: ' + label);
+}
+
+function initCloud(){
+  if (cloud.initPromise) return cloud.initPromise;
+  cloud.initPromise = (async () => {
+    if (!window.firebase || typeof firebase.initializeApp !== 'function') {
+      setCloudStatus('off', 'SDK Firebase tidak termuat.');
+      return false;
+    }
+    try {
+      if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+      const db = firebase.firestore();
+      try {
+        await db.enablePersistence({ synchronizeTabs: true });
+      } catch (err) {
+        if (err && (err.code === 'failed-precondition' || err.code === 'unimplemented')) {
+          console.warn('Penyimpanan offline Firestore tidak aktif:', err.code);
+        } else {
+          console.warn('Gagal mengaktifkan penyimpanan offline Firestore', err);
+        }
+      }
+      cloud.db = db;
+      cloud.ready = true;
+      setCloudStatus('connecting');
+      db.doc('.info/connected').onSnapshot(snap => {
+        const data = snap && snap.exists ? snap.data() : null;
+        cloud.online = !!(data && data.connected);
+        if (!cloud.started) return;
+        if (!cloud.online) {
+          if (navigator.onLine === false) setCloudStatus('offline');
+          return;
+        }
+        if (cloud.pending > 0) setCloudStatus('syncing');
+        else if (Object.keys(cloud.initialized).length) setCloudStatus('synced');
+      }, () => { /* abaikan */ });
+      return true;
+    } catch (err) {
+      console.error('Firebase gagal dimulai', err);
+      setCloudStatus('error', (err && err.message) ? err.message : String(err));
+      return false;
+    }
+  })();
+  return cloud.initPromise;
+}
+
+function ensureCloudAuth(){
+  if (!cloud.ready) return Promise.reject(new Error('Cloud belum siap.'));
+  if (cloud.authPromise) return cloud.authPromise;
+  cloud.authPromise = new Promise((resolve, reject) => {
+    const auth = firebase.auth();
+    let settled = false;
+    let timer = null;
+    const finish = (fn, value) => {
+      if (settled) return;
+      settled = true;
+      if (timer) clearTimeout(timer);
+      try { unsub(); } catch (err) { /* abaikan */ }
+      if (fn === reject) cloud.authPromise = null;
+      fn(value);
+    };
+    const unsub = auth.onAuthStateChanged(user => {
+      if (user) finish(resolve, user);
+    }, err => finish(reject, err));
+    timer = setTimeout(() => finish(reject, new Error('Koneksi Firebase terlalu lama.')), 8000);
+    auth.signInAnonymously().catch(err => finish(reject, err));
+  });
+  return cloud.authPromise;
+}
+
+function cleanCloudRecord(rec){
+  const out = {};
+  Object.keys(rec || {}).forEach(k => {
+    if (rec[k] !== undefined) out[k] = rec[k];
+  });
+  try { return JSON.parse(JSON.stringify(out)); }
+  catch (err) { return out; }
+}
+
+function sortCloudRecords(list){
+  return list.slice().sort((a, b) => {
+    const ca = Number(a && a.createdAt) || 0;
+    const cb = Number(b && b.createdAt) || 0;
+    if (ca !== cb) return ca - cb;
+    return String(a && a.id || '').localeCompare(String(b && b.id || ''));
+  });
+}
+
+function cloudScheduleRender(){
+  if (!currentUser()) return;
+  if (state.modal) { cloud.renderPending = true; return; }
+  const ae = document.activeElement;
+  if (ae && appEl.contains(ae) && /^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName)) {
+    cloud.renderPending = true;
+    return;
+  }
+  render();
+}
+
+function cloudReachable(){
+  return cloud.online || navigator.onLine !== false;
+}
+
+function applyCloudData(name, remote, authoritative, cached){
+  const key = LS[name];
+  const local = read(key, []);
+  const map = new Map();
+  if (!authoritative) local.forEach(r => { if (r && r.id) map.set(r.id, r); });
+  (remote || []).forEach(r => { if (r && r.id) map.set(r.id, r); });
+  const dirty = cloud.dirty[name];
+  if (dirty) dirty.forEach((rec, id) => map.set(id, rec));
+  const del = cloud.dirtyDel[name];
+  if (del) del.forEach(id => map.delete(id));
+  const next = sortCloudRecords(Array.from(map.values()));
+  if (JSON.stringify(next) !== JSON.stringify(local)) {
+    write(key, next);
+    cloud.lastSyncAt = Date.now();
+    cloudScheduleRender();
+  }
+  if (!cached) setCloudStatus(cloud.pending > 0 ? 'syncing' : (cloudReachable() ? 'synced' : 'offline'));
+}
+
+function scheduleCloudFlush(name){
+  if (cloud.timers[name]) clearTimeout(cloud.timers[name]);
+  cloud.timers[name] = setTimeout(() => {
+    cloud.timers[name] = null;
+    flushCloudCollection(name);
+  }, 500);
+}
+
+function cloudMark(name, prev, next){
+  if (!cloud.started || !cloud.wid) return;
+  const d = cloud.dirty[name] || (cloud.dirty[name] = new Map());
+  const del = cloud.dirtyDel[name] || (cloud.dirtyDel[name] = new Set());
+  const prevMap = new Map((prev || []).map(r => [r.id, r]));
+  const nextMap = new Map((next || []).map(r => [r.id, r]));
+  nextMap.forEach((rec, id) => {
+    const before = prevMap.get(id);
+    if (!before || JSON.stringify(before) !== JSON.stringify(rec)) {
+      d.set(id, rec);
+      del.delete(id);
+    }
+  });
+  prevMap.forEach((rec, id) => {
+    if (!nextMap.has(id)) {
+      del.add(id);
+      d.delete(id);
+    }
+  });
+  if (cloud.initialized[name]) scheduleCloudFlush(name);
+}
+
+async function flushCloudCollection(name){
+  if (!cloud.started || !cloud.wid || !cloud.db) return;
+  const d = cloud.dirty[name] || (cloud.dirty[name] = new Map());
+  const del = cloud.dirtyDel[name] || (cloud.dirtyDel[name] = new Set());
+  if (!d.size && !del.size) return;
+  const sets = Array.from(d.entries());
+  const dels = Array.from(del);
+  d.clear();
+  del.clear();
+  const base = cloud.db.collection('workspaces').doc(cloud.wid).collection(name);
+  const ops = sets.map(([id, rec]) => ({ type: 'set', id, rec }))
+    .concat(dels.map(id => ({ type: 'del', id })));
+  cloud.pending++;
+  setCloudStatus('syncing');
+  try {
+    for (let i = 0; i < ops.length; i += 400) {
+      const batch = cloud.db.batch();
+      ops.slice(i, i + 400).forEach(op => {
+        const ref = base.doc(op.id);
+        if (op.type === 'set') batch.set(ref, cleanCloudRecord(op.rec));
+        else batch.delete(ref);
+      });
+      await batch.commit();
+    }
+    cloud.lastSyncAt = Date.now();
+  } catch (err) {
+    console.warn('Gagal mengirim data ' + name, err);
+    sets.forEach(([id, rec]) => d.set(id, rec));
+    dels.forEach(id => del.add(id));
+    setCloudStatus('error', (err && err.message) ? err.message : 'Gagal mengirim data.');
+  } finally {
+    cloud.pending = Math.max(0, cloud.pending - 1);
+    if (cloud.pending === 0 && cloud.status !== 'error') {
+      setCloudStatus(cloudReachable() ? 'synced' : 'offline');
+    }
+    if ((d.size || del.size) && cloud.status !== 'error') scheduleCloudFlush(name);
+  }
+}
+
+function cloudReplaceAll(name, list){
+  const d = cloud.dirty[name] || (cloud.dirty[name] = new Map());
+  const del = cloud.dirtyDel[name] || (cloud.dirtyDel[name] = new Set());
+  (list || []).forEach(rec => {
+    if (!rec || !rec.id) return;
+    d.set(rec.id, rec);
+    del.delete(rec.id);
+  });
+  flushCloudCollection(name);
+}
+
+function listenCloudCollection(name){
+  if (!cloud.db || !cloud.wid) return;
+  const col = cloud.db.collection('workspaces').doc(cloud.wid).collection(name);
+  const unsub = col.onSnapshot({ includeMetadataChanges: true }, snap => {
+    if (!cloud.started) return;
+    if (snap.metadata.hasPendingWrites) return;
+    const remote = snap.docs.map(doc => cleanCloudRecord(doc.data()));
+    const fromCache = !!snap.metadata.fromCache;
+    if (!fromCache) cloud.online = true;
+    if (!cloud.initialized[name]) {
+      if (fromCache) {
+        if (remote.length) applyCloudData(name, remote, false, true);
+        return;
+      }
+      cloud.initialized[name] = true;
+      const local = read(LS[name], []);
+      if (!remote.length) {
+        if (local.length && cloud.mergeLocal) {
+          cloudReplaceAll(name, local);
+          setCloudStatus('syncing');
+        } else if (local.length) {
+          applyCloudData(name, remote, true);
+        }
+        return;
+      }
+      if (cloud.mergeLocal && local.length) {
+        const remoteIds = new Set(remote.map(r => r && r.id));
+        const localOnly = local.filter(r => r && r.id && !remoteIds.has(r.id));
+        applyCloudData(name, remote, true);
+        if (localOnly.length) cloudReplaceAll(name, localOnly);
+        flushCloudCollection(name);
+        return;
+      }
+      applyCloudData(name, remote, true);
+      flushCloudCollection(name);
+      return;
+    }
+    applyCloudData(name, remote, true);
+  }, err => {
+    console.warn('Sinkronisasi ' + name + ' gagal', err);
+    setCloudStatus('error', (err && err.message) ? err.message : 'Gagal menyinkronkan data.');
+  });
+  cloud.unsubs.push(unsub);
+}
+
+function stopCloud(){
+  cloud.unsubs.forEach(fn => { try { fn(); } catch (err) { /* abaikan */ } });
+  cloud.unsubs = [];
+  Object.keys(cloud.timers).forEach(k => {
+    if (cloud.timers[k]) clearTimeout(cloud.timers[k]);
+    cloud.timers[k] = null;
+  });
+  cloud.started = false;
+  cloud.wid = null;
+  cloud.initialized = {};
+  cloud.dirty = {};
+  cloud.dirtyDel = {};
+  cloud.pending = 0;
+  cloud.renderPending = false;
+  setCloudStatus('off', '');
+}
+
+function cloudAuthHint(err){
+  const code = (err && err.code) || '';
+  if (code === 'auth/configuration-not-found') {
+    return 'Anonymous Auth belum aktif di Firebase Console. Data tetap tersimpan lokal.';
+  }
+  if (code === 'auth/unauthorized-domain') {
+    return 'Domain aplikasi ini belum diizinkan di Firebase Authentication.';
+  }
+  if (code === 'auth/network-request-failed') {
+    return 'Tidak ada koneksi internet. Data tetap tersimpan lokal.';
+  }
+  if (err && err.message) return err.message;
+  return 'Tidak bisa terhubung ke cloud. Data tetap tersimpan lokal.';
+}
+
+async function startCloud(wid, user){
+  if (!wid) return;
+  if (cloud.started && cloud.wid === wid) return;
+  setCloudStatus('connecting');
+  const ready = cloud.ready || await initCloud();
+  if (!ready) return;
+  try {
+    await ensureCloudAuth();
+  } catch (err) {
+    console.warn('Tidak bisa masuk ke Firebase', err);
+    const code = (err && err.code) || '';
+    const offline = code === 'auth/network-request-failed';
+    setCloudStatus(offline ? 'offline' : 'error', cloudAuthHint(err));
+    return;
+  }
+  cloud.unsubs.forEach(fn => { try { fn(); } catch (err) { /* abaikan */ } });
+  cloud.unsubs = [];
+  cloud.started = true;
+  cloud.wid = wid;
+  cloud.initialized = {};
+  cloud.dirty = {};
+  cloud.dirtyDel = {};
+  cloud.pending = 0;
+  const previousWs = localStorage.getItem(LS.cloudWs);
+  cloud.mergeLocal = previousWs === null || previousWs === wid;
+  try { localStorage.setItem(LS.cloudWs, wid); } catch (err) { /* abaikan */ }
+  setCloudStatus('connecting');
+  CLOUD_COLLECTIONS.forEach(name => listenCloudCollection(name));
+  if (user && user.role === 'coach') scheduleLookupRefresh();
+}
+
+function cloudWriteLookup(user, wid){
+  if (!cloud.ready || !cloud.db || !user || !user.username) return Promise.resolve();
+  return cloud.db.collection('lookup').doc(user.username).set({
+    wid, userId: user.id, role: user.role, name: user.name, updatedAt: Date.now()
+  }, { merge: true }).catch(err => {
+    console.warn('Gagal menyimpan peta username', err);
+  });
+}
+
+let lookupTimer = null;
+function scheduleLookupRefresh(){
+  if (!cloud.started || !cloud.wid) return;
+  if (lookupTimer) clearTimeout(lookupTimer);
+  lookupTimer = setTimeout(() => {
+    lookupTimer = null;
+    refreshLookups();
+  }, 900);
+}
+
+async function refreshLookups(){
+  if (!cloud.started || !cloud.wid || !cloud.ready) return;
+  const me = currentUser();
+  if (!me || me.role !== 'coach') return;
+  const users = getUsers();
+  for (const u of users) {
+    await cloudWriteLookup(u, cloud.wid);
+  }
+}
+
+async function cloudFindUser(username){
+  if (!cloud.ready) {
+    const ok = await initCloud();
+    if (!ok) return null;
+  }
+  if (navigator.onLine === false) return null;
+  try { await ensureCloudAuth(); }
+  catch (err) { return null; }
+  try {
+    const lookupSnap = await cloud.db.collection('lookup').doc(username).get();
+    if (!lookupSnap.exists) return null;
+    const data = lookupSnap.data() || {};
+    if (!data.wid || !data.userId) return null;
+    const userSnap = await cloud.db.collection('workspaces').doc(data.wid)
+      .collection('users').doc(data.userId).get();
+    if (!userSnap.exists) return null;
+    return { user: cleanCloudRecord(userSnap.data()), wid: data.wid };
+  } catch (err) {
+    console.warn('Gagal mencari akun di cloud', err);
+    return null;
+  }
+}
+
+async function cloudUsernameTaken(username){
+  if (!cloud.ready) {
+    const ok = await initCloud();
+    if (!ok) return false;
+  }
+  if (navigator.onLine === false) return false;
+  try { await ensureCloudAuth(); }
+  catch (err) { return false; }
+  try {
+    const snap = await cloud.db.collection('lookup').doc(username).get();
+    return snap.exists;
+  } catch (err) {
+    return false;
+  }
+}
+
+function cloudWorkspaceId(user){
+  if (!user) return null;
+  return user.role === 'coach' ? user.id : (user.coachId || null);
+}
+
+function showCloudInfo(){
+  if (!cloud.ready) { toast('Mode lokal: Firebase belum aktif.'); return; }
+  if (!cloud.started) { toast('Sinkronisasi cloud belum berjalan.'); return; }
+  const label = CLOUD_STATUS_LABEL[cloud.status] || 'Lokal';
+  const when = cloud.lastSyncAt ? new Date(cloud.lastSyncAt).toLocaleTimeString('id-ID') : '—';
+  toast('Status: ' + label + ' · Sinkron terakhir: ' + when);
+}
+
+
+/* ================= password ================= */
+const PW_SALT = 'panahlatih::v1::';
+function simpleHash(str){
+  let h1 = 0xdeadbeef ^ str.length;
+  let h2 = 0x41c6ce57 ^ str.length;
+  for (let i = 0; i < str.length; i++) {
+    const ch = str.charCodeAt(i);
+    h1 = Math.imul(h1 ^ ch, 2654435761);
+    h2 = Math.imul(h2 ^ ch, 1597334677);
+  }
+  h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+  h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+  return (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(16);
+}
+async function sha256Hex(text){
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+async function hashPassword(pw){
+  if (window.crypto && crypto.subtle && crypto.subtle.digest) {
+    try { return 'sha256:' + await sha256Hex(PW_SALT + pw); }
+    catch (err) { /* fallback */ }
+  }
+  return 'simple:' + simpleHash(PW_SALT + pw);
+}
+async function verifyPassword(pw, stored){
+  if (!stored) return false;
+  if (stored.indexOf('sha256:') === 0) {
+    if (!(window.crypto && crypto.subtle && crypto.subtle.digest)) return false;
+    try { return stored === 'sha256:' + await sha256Hex(PW_SALT + pw); }
+    catch (err) { return false; }
+  }
+  return stored === 'simple:' + simpleHash(PW_SALT + pw);
+}
+
+/* ================= utils ================= */
+function esc(value){
+  return String(value == null ? '' : value).replace(/[&<>"']/g, c => (
+    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+  ));
+}
+function normalizeUsername(value){
+  return String(value || '').trim().toLowerCase();
+}
+function isValidUsername(value){
+  return /^[a-z0-9._]{3,20}$/.test(value);
+}
+function firstName(name){
+  return String(name || '').trim().split(/\s+/)[0] || '';
+}
+function coachLabel(name){
+  const n = String(name || '').trim();
+  return /^coach\b/i.test(n) ? n : ('Coach ' + n).trim();
+}
+function initials(name){
+  const parts = String(name || '').trim().split(/\s+/).filter(Boolean);
+  if (!parts.length) return '?';
+  const first = parts[0].charAt(0);
+  const last = parts.length > 1 ? parts[parts.length - 1].charAt(0) : '';
+  return (first + last).toUpperCase();
+}
+function pad2(n){ return String(n).padStart(2, '0'); }
+function todayISO(){
+  const d = new Date();
+  return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+}
+function isoFromTs(ts){
+  const d = new Date(ts);
+  return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+}
+const MONTHS_SHORT = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+function fmtDate(iso){
+  if (!iso) return '-';
+  const parts = iso.split('-').map(Number);
+  const d = new Date(parts[0], parts[1] - 1, parts[2]);
+  if (isNaN(d.getTime())) return iso;
+  return d.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+}
+function fmtDateShort(iso){
+  if (!iso) return '-';
+  const parts = iso.split('-').map(Number);
+  if (parts.length < 3) return iso;
+  return parts[2] + ' ' + (MONTHS_SHORT[parts[1] - 1] || '') + ' ' + parts[0];
+}
+function fmtDateTime(ts){
+  const d = new Date(ts);
+  return d.toLocaleString('id-ID', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+}
+function formatNum(n){
+  const x = Number(n);
+  if (!isFinite(x)) return '-';
+  return Number.isInteger(x) ? String(x) : x.toLocaleString('id-ID', { maximumFractionDigits: 2 });
+}
+function byDateDesc(a, b){
+  if (a.date !== b.date) return a.date < b.date ? 1 : -1;
+  return (b.createdAt || 0) - (a.createdAt || 0);
+}
+function startOfWeek(date){
+  const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const day = (d.getDay() + 6) % 7;
+  d.setDate(d.getDate() - day);
+  return d;
+}
+function isThisWeek(iso){
+  if (!iso) return false;
+  const parts = iso.split('-').map(Number);
+  const d = new Date(parts[0], parts[1] - 1, parts[2]);
+  const start = startOfWeek(new Date());
+  const end = new Date(start.getFullYear(), start.getMonth(), start.getDate() + 7);
+  return d >= start && d < end;
+}
+function isThisMonth(iso){
+  if (!iso) return false;
+  const now = new Date();
+  const parts = iso.split('-').map(Number);
+  return parts[0] === now.getFullYear() && parts[1] === now.getMonth() + 1;
+}
+function parseISODate(iso){
+  if (!iso) return null;
+  const parts = String(iso).split('-').map(Number);
+  if (parts.length < 3 || !parts[0] || !parts[1] || !parts[2]) return null;
+  const d = new Date(parts[0], parts[1] - 1, parts[2]);
+  return isNaN(d.getTime()) ? null : d;
+}
+function isValidISODate(iso){
+  const d = parseISODate(iso);
+  return !!d && isoFromTs(d.getTime()) === iso;
+}
+function calcAge(birthDate){
+  const b = parseISODate(birthDate);
+  if (!b) return null;
+  const now = new Date();
+  let age = now.getFullYear() - b.getFullYear();
+  const m = now.getMonth() - b.getMonth();
+  if (m < 0 || (m === 0 && now.getDate() < b.getDate())) age--;
+  return age >= 0 ? age : null;
+}
+function formatAge(age){
+  return age == null ? '-' : age + ' tahun';
+}
+function trainingDuration(startDate){
+  const s = parseISODate(startDate);
+  if (!s) return null;
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  if (s > today) return { days: 0, months: 0, years: 0, text: 'Belum mulai' };
+  let months = (today.getFullYear() - s.getFullYear()) * 12 + (today.getMonth() - s.getMonth());
+  if (today.getDate() < s.getDate()) months--;
+  const years = Math.floor(months / 12);
+  const remMonths = months % 12;
+  const days = Math.floor((today - s) / 86400000);
+  let text;
+  if (years > 0) text = years + ' tahun' + (remMonths ? ' ' + remMonths + ' bulan' : '');
+  else if (months > 0) text = months + ' bulan';
+  else text = days + ' hari';
+  return { days, months, years, text };
+}
+function attendanceSessions(a){
+  const n = Number(a && a.sessions);
+  return isFinite(n) && n > 0 ? Math.floor(n) : 1;
+}
+function attendanceHours(a){
+  return attendanceSessions(a) * 2;
+}
+function totalAttendanceSessions(athleteId){
+  return getAttendance()
+    .filter(a => a.athleteId === athleteId)
+    .reduce((acc, a) => acc + attendanceSessions(a), 0);
+}
+function sumEntries(sessions, key, field){
+  return sessions.reduce((acc, s) => acc + (Number(s.entries && s.entries[key] && s.entries[key][field]) || 0), 0);
+}
+function activeTarget(athleteId){
+  return getTargets()
+    .filter(t => t.athleteId === athleteId)
+    .sort((a, b) => b.createdAt - a.createdAt)[0] || null;
+}
+function quotaSummary(athleteId){
+  const packages = getPackages()
+    .filter(p => p.athleteId === athleteId)
+    .sort((a, b) => (b.paidAt || '').localeCompare(a.paidAt || '') || b.createdAt - a.createdAt);
+  const attendance = getAttendance()
+    .filter(a => a.athleteId === athleteId)
+    .sort((a, b) => (b.date || '').localeCompare(a.date || '') || b.createdAt - a.createdAt);
+  const purchased = packages.reduce((acc, p) => acc + (Number(p.meetings) || 0), 0);
+  const used = attendance.reduce((acc, a) => acc + attendanceSessions(a), 0);
+  return {
+    packages,
+    attendance,
+    purchased,
+    used,
+    remaining: purchased - used,
+    lastPurchase: packages[0] || null,
+    lastAttendance: attendance[0] || null
+  };
+}
+function quotaStatus(remaining, purchased){
+  if (purchased === 0 && remaining === 0) return { tone: 'no', label: 'Belum ada kuota' };
+  if (remaining < 0) return { tone: 'no', label: 'Lewat ' + Math.abs(remaining) + ' pertemuan' };
+  if (remaining === 0) return { tone: 'no', label: 'Kuota habis' };
+  if (remaining <= 2) return { tone: 'warn', label: 'Kuota menipis' };
+  return { tone: 'ok', label: 'Kuota aman' };
+}
+function quotaTag(remaining, purchased){
+  const status = quotaStatus(remaining, purchased);
+  return `<span class="tag ${status.tone}">${esc(status.label)}</span>`;
+}
+function formatRupiah(value){
+  const n = Number(value);
+  if (!isFinite(n) || n <= 0) return '';
+  return 'Rp ' + n.toLocaleString('id-ID');
+}
+function quotaCard(athlete, opts){
+  opts = opts || {};
+  const q = quotaSummary(athlete.id);
+  const status = quotaStatus(q.remaining, q.purchased);
+  const pct = q.purchased > 0 ? Math.min(100, Math.round((q.used / q.purchased) * 100)) : 0;
+  const last = q.lastPurchase;
+  const lastText = last
+    ? `Paket terakhir ${esc(fmtDateShort(last.paidAt || isoFromTs(last.createdAt)))} · ${esc(formatNum(last.meetings))} pertemuan${last.amount ? ' · ' + esc(formatRupiah(last.amount)) : ''}`
+    : 'Belum ada paket pembelian.';
+  return `<div class="card quota-card">
+    <div class="quota-head">
+      <div>
+        <h3>🎟️ Kuota Latihan Bersama Coach</h3>
+        <p class="muted">${opts.manage ? esc(athlete.name) + ' · ' : ''}${lastText}</p>
+      </div>
+      ${quotaTag(q.remaining, q.purchased)}
+    </div>
+    <div class="quota-num"><strong>${formatNum(q.remaining)}</strong><span>pertemuan tersisa</span></div>
+    <div class="quota-bar ${status.tone === 'ok' ? '' : 'low'}"><i style="width:${pct}%"></i></div>
+    <div class="quota-facts">
+      <span>Dibeli <strong>${formatNum(q.purchased)}</strong> pertemuan</span>
+      <span>Sudah hadir <strong>${formatNum(q.used)}</strong> pertemuan</span>
+      ${q.lastAttendance ? `<span>Absensi terakhir <strong>${esc(fmtDateShort(q.lastAttendance.date))}</strong></span>` : ''}
+    </div>
+    ${opts.manage ? `<div class="quota-actions">
+      <button type="button" class="btn btn-soft btn-sm" data-action="open-package" data-athlete="${athlete.id}">＋ Tambah Paket</button>
+      <button type="button" class="btn btn-primary btn-sm" data-action="open-attendance" data-athlete="${athlete.id}">✓ Tandai Hadir</button>
+    </div>` : ''}
+  </div>`;
+}
+function attendanceList(athleteId, opts){
+  opts = opts || {};
+  const list = getAttendance()
+    .filter(a => a.athleteId === athleteId)
+    .sort(byDateDesc);
+  if (!list.length) return '<p class="muted" style="font-size:12.5px">Belum ada absensi tercatat.</p>';
+  return `<div class="att-list">${list.map(a => {
+    const athlete = opts.showAthlete ? getUserById(a.athleteId) : null;
+    const sesi = attendanceSessions(a);
+    return `<div class="att-row">
+      <span class="att-icon">✓</span>
+      <div class="att-main">
+        <div class="att-title">${esc(fmtDate(a.date))}${athlete ? ' · ' + esc(athlete.name) : ''}</div>
+        <div class="att-sub">${sesi} sesi · ${attendanceHours(a)} jam${a.note ? ' · ' + esc(a.note) : ''}</div>
+      </div>
+      ${opts.manage ? `<button type="button" class="btn btn-danger btn-xs" data-action="delete-attendance" data-id="${a.id}">Hapus</button>` : ''}
+    </div>`;
+  }).join('')}</div>`;
+}
+function packageList(athleteId, opts){
+  opts = opts || {};
+  const list = getPackages()
+    .filter(p => p.athleteId === athleteId)
+    .sort((a, b) => (b.paidAt || '').localeCompare(a.paidAt || '') || b.createdAt - a.createdAt);
+  if (!list.length) return '<p class="muted" style="font-size:12.5px">Belum ada paket pembelian.</p>';
+  return `<div class="att-list">${list.map(p => `<div class="att-row">
+    <span class="att-icon" style="background:rgba(245,165,36,.12);color:var(--amber-2)">🎟️</span>
+    <div class="att-main">
+      <div class="att-title">${esc(formatNum(p.meetings))} pertemuan${p.amount ? ' · ' + esc(formatRupiah(p.amount)) : ''}</div>
+      <div class="att-sub">${esc(fmtDate(p.paidAt || isoFromTs(p.createdAt)))}${p.note ? ' · ' + esc(p.note) : ''}</div>
+    </div>
+    ${opts.manage ? `<button type="button" class="btn btn-danger btn-xs" data-action="delete-package" data-id="${p.id}">Hapus</button>` : ''}
+  </div>`).join('')}</div>`;
+}
+function toast(message){
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = message;
+  toastRoot.appendChild(el);
+  setTimeout(() => {
+    el.style.transition = 'opacity .25s';
+    el.style.opacity = '0';
+    setTimeout(() => el.remove(), 260);
+  }, 2600);
+}
+function scrollTop(){ window.scrollTo(0, 0); }
+function setError(form, message){
+  let box = form.querySelector('.form-error');
+  if (!box) {
+    box = document.createElement('div');
+    box.className = 'form-error';
+    form.appendChild(box);
+  }
+  box.textContent = message;
+  box.hidden = false;
+  try { box.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } catch (err) { /* noop */ }
+}
+function setBusy(form, busy, label){
+  const btn = form.querySelector('button[type="submit"]');
+  if (!btn) return;
+  if (busy) {
+    if (!btn.dataset.idleLabel) btn.dataset.idleLabel = btn.textContent;
+    btn.textContent = label || 'Memproses…';
+    btn.disabled = true;
+  } else {
+    if (btn.dataset.idleLabel) btn.textContent = btn.dataset.idleLabel;
+    btn.disabled = false;
+  }
+}
+function clearError(form){
+  const box = form.querySelector('.form-error');
+  if (box) { box.hidden = true; box.textContent = ''; }
+}
+function readProfileExtra(fd){
+  const birthDate = String(fd.get('birthDate') || '').trim();
+  if (birthDate !== '') {
+    if (!isValidISODate(birthDate)) return { error: 'Tanggal lahir tidak valid.' };
+    const born = parseISODate(birthDate);
+    if (born > new Date()) return { error: 'Tanggal lahir tidak boleh di masa depan.' };
+    if (calcAge(birthDate) > 120) return { error: 'Tanggal lahir tidak masuk akal.' };
+  }
+  const startDate = String(fd.get('startDate') || '').trim();
+  if (startDate !== '') {
+    if (!isValidISODate(startDate)) return { error: 'Tanggal mulai latihan tidak valid.' };
+    if (startDate > todayISO()) return { error: 'Tanggal mulai latihan tidak boleh di masa depan.' };
+  }
+  const phone = String(fd.get('phone') || '').trim();
+  if (phone.length > 30) return { error: 'No. HP maksimal 30 karakter.' };
+  const address = String(fd.get('address') || '').trim();
+  if (address.length > 200) return { error: 'Alamat maksimal 200 karakter.' };
+  return { birthDate, startDate, phone, address };
+}
+
+/* ================= auth screens ================= */
+function heroMarkup(){
+  return `
+  <aside class="auth-hero">
+    <div class="brand">
+      <div class="brand-badge">🏹</div>
+      <div>
+        <div class="brand-name">PanahLatih</div>
+        <div class="brand-sub">Catatan Latihan Panahan</div>
+      </div>
+    </div>
+    <div>
+      <h1 class="hero-title">Latihan terukur,<br><span>prestasi terarah.</span></h1>
+      <p class="hero-sub">Catat setiap sesi latihan atlet panahanmu — memanah, lari, plank, push-up, angkat beban, dan bergelantungan — lalu pantau perkembangannya dari satu tempat.</p>
+    </div>
+    <ul class="hero-list">
+      <li><span class="dot">✓</span> Login terpisah untuk pelatih dan atlet</li>
+      <li><span class="dot">✓</span> Pelatih memberi target dan komentar tiap sesi</li>
+      <li><span class="dot">✓</span> Atlet mencatat latihannya sendiri, kapan saja</li>
+      <li><span class="dot">✓</span> Tersinkron otomatis ke cloud, tetap jalan saat offline</li>
+    </ul>
+  </aside>`;
+}
+function authShell(inner, foot){
+  return `
+  <div class="auth-wrap">
+    ${heroMarkup()}
+    <main class="auth-panel">
+      <div class="auth-card card">
+        <div class="auth-mobile-brand brand">
+          <div class="brand-badge">🏹</div>
+          <div>
+            <div class="brand-name">PanahLatih</div>
+            <div class="brand-sub">Catatan Latihan Panahan</div>
+          </div>
+        </div>
+        ${inner}
+      </div>
+      <p class="auth-foot">${foot || 'Data tersinkron otomatis ke cloud dan tetap bisa dipakai saat offline. Lakukan ekspor cadangan secara berkala dari menu Profil.'}</p>
+    </main>
+  </div>`;
+}
+function renderSetup(){
+  state.view = 'home';
+  modalRoot.innerHTML = '';
+  document.body.classList.remove('modal-open');
+  appEl.innerHTML = authShell(`
+    <span class="setup-badge">Langkah awal</span>
+    <h2 class="auth-title">Buat akun pelatih</h2>
+    <p class="auth-sub">Akun ini akan mengelola atlet, target latihan, dan komentar.</p>
+    <form data-form="setup" class="stack" novalidate>
+      <div class="field">
+        <label for="setup-name">Nama lengkap</label>
+        <input id="setup-name" name="name" autocomplete="name" placeholder="Contoh: Coach Rahmat" required>
+      </div>
+      <div class="field">
+        <label for="setup-username">Username</label>
+        <input id="setup-username" name="username" autocomplete="username" placeholder="huruf kecil, tanpa spasi" required>
+        <span class="form-hint">3–20 karakter. Boleh huruf, angka, titik, dan garis bawah.</span>
+      </div>
+      <div class="field">
+        <label for="setup-pass">Password</label>
+        <input id="setup-pass" name="password" type="password" autocomplete="new-password" placeholder="Minimal 6 karakter" required>
+      </div>
+      <div class="field">
+        <label for="setup-pass2">Konfirmasi password</label>
+        <input id="setup-pass2" name="password2" type="password" autocomplete="new-password" placeholder="Ulangi password" required>
+      </div>
+      <div class="form-error" hidden></div>
+      <button class="btn btn-primary btn-block" type="submit">Buat Akun Pelatih</button>
+    </form>
+    <p class="form-hint" style="margin-top:16px">Setelah akun pelatih dibuat, kamu bisa menambahkan akun atlet atau membiarkan atlet mendaftar sendiri.</p>
+    <button type="button" class="btn btn-ghost btn-block" data-action="auth-tab" data-tab="login" style="margin-top:12px">Sudah punya akun? Masuk</button>
+  `);
+}
+function renderAuth(){
+  state.view = 'home';
+  modalRoot.innerHTML = '';
+  document.body.classList.remove('modal-open');
+  const inner = `
+    <h2 class="auth-title">Masuk ke akunmu</h2>
+    <p class="auth-sub">Pelatih dan atlet masuk lewat halaman yang sama.</p>
+    <div class="tabs">
+      <button type="button" class="tab ${state.loginTab === 'login' ? 'active' : ''}" data-action="auth-tab" data-tab="login">Masuk</button>
+      <button type="button" class="tab ${state.loginTab === 'register' ? 'active' : ''}" data-action="auth-tab" data-tab="register">Daftar Atlet</button>
+    </div>
+    ${state.loginTab === 'login' ? loginForm() : registerForm()}`;
+  appEl.innerHTML = authShell(inner);
+}
+function loginForm(){
+  return `
+  <form data-form="login" class="stack" novalidate>
+    <div class="field">
+      <label for="login-username">Username</label>
+      <input id="login-username" name="username" autocomplete="username" placeholder="Username kamu" required>
+    </div>
+    <div class="field">
+      <label for="login-password">Password</label>
+      <input id="login-password" name="password" type="password" autocomplete="current-password" placeholder="Password kamu" required>
+    </div>
+    <div class="form-error" hidden></div>
+    <button class="btn btn-primary btn-block" type="submit">Masuk</button>
+  </form>`;
+}
+function registerForm(){
+  const coaches = getUsers().filter(u => u.role === 'coach');
+  return `
+  <form data-form="register" class="stack" novalidate>
+    <div class="field">
+      <label for="reg-name">Nama lengkap</label>
+      <input id="reg-name" name="name" autocomplete="name" placeholder="Nama kamu" required>
+    </div>
+    <div class="field">
+      <label for="reg-username">Username</label>
+      <input id="reg-username" name="username" autocomplete="username" placeholder="huruf kecil, tanpa spasi" required>
+    </div>
+    <div class="field">
+      <label for="reg-pass">Password</label>
+      <input id="reg-pass" name="password" type="password" autocomplete="new-password" placeholder="Minimal 6 karakter" required>
+    </div>
+    <div class="field">
+      <label for="reg-pass2">Konfirmasi password</label>
+      <input id="reg-pass2" name="password2" type="password" autocomplete="new-password" placeholder="Ulangi password" required>
+    </div>
+    <div class="form-grid-2">
+      <div class="field">
+        <label for="reg-birth">Tanggal lahir <span class="unit">(opsional)</span></label>
+        <input id="reg-birth" name="birthDate" type="date" max="${todayISO()}">
+      </div>
+      <div class="field">
+        <label for="reg-start">Mulai ikut latihan <span class="unit">(opsional)</span></label>
+        <input id="reg-start" name="startDate" type="date" max="${todayISO()}">
+      </div>
+    </div>
+    <div class="field">
+      <label for="reg-phone">No. HP <span class="unit">(opsional)</span></label>
+      <input id="reg-phone" name="phone" type="tel" placeholder="08xx xxxx xxxx">
+    </div>
+    <div class="field">
+      <label for="reg-address">Alamat <span class="unit">(opsional)</span></label>
+      <input id="reg-address" name="address" placeholder="Kota / alamat singkat">
+    </div>
+    <div class="field">
+      <label for="reg-coach">Pelatih</label>
+      ${coaches.length
+        ? `<select id="reg-coach" name="coachId" required>
+            ${coaches.map(c => `<option value="${c.id}">${esc(coachLabel(c.name))} (@${esc(c.username)})</option>`).join('')}
+          </select>`
+        : `<input id="reg-coach" disabled placeholder="Belum ada akun pelatih">`}
+    </div>
+    <div class="form-error" hidden></div>
+    <button class="btn btn-primary btn-block" type="submit" ${coaches.length ? '' : 'disabled'}>Daftar sebagai Atlet</button>
+  </form>`;
+}
+
+/* ================= shell ================= */
+function shell(user){
+  const nav = user.role === 'coach'
+    ? [['home', 'Beranda'], ['athletes', 'Atlet'], ['sessions', 'Sesi'], ['attendance', 'Absensi'], ['profile', 'Profil']]
+    : [['home', 'Beranda'], ['session', 'Catat'], ['log', 'Riwayat'], ['target', 'Target'], ['quota', 'Kuota'], ['profile', 'Profil']];
+  const isActive = (view) => {
+    if (state.view === view) return true;
+    if (view === 'athletes' && state.view === 'athlete') return true;
+    return false;
+  };
+  return `
+  <div class="shell">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="brand">
+          <div class="brand-badge">🏹</div>
+          <div>
+            <div class="brand-name">PanahLatih</div>
+            <div class="brand-sub">Catatan Latihan Panahan</div>
+          </div>
+        </div>
+        <nav class="nav">
+          ${nav.map(([view, label]) => `<button type="button" class="nav-btn ${isActive(view) ? 'active' : ''}" data-action="nav" data-view="${view}">${label}</button>`).join('')}
+        </nav>
+        <div class="topbar-right">
+          <button type="button" id="sync-badge" class="sync-pill off" data-action="sync-info" title="Status sinkronisasi">
+            <span class="sync-dot"></span><span class="sync-label">Lokal</span>
+          </button>
+          <div class="userchip" title="${esc(user.name)}">
+            <div class="avatar">${esc(initials(user.name))}</div>
+            <div class="userchip-text">
+              <span class="userchip-name">${esc(user.name)}</span>
+              <span class="role-badge ${user.role}">${user.role === 'coach' ? 'Pelatih' : 'Atlet'}</span>
+            </div>
+          </div>
+          <button type="button" class="icon-btn" data-action="logout" title="Keluar" aria-label="Keluar">⏻</button>
+        </div>
+      </div>
+    </header>
+    <main class="main">${content(user)}</main>
+  </div>`;
+}
+function render(){
+  const user = currentUser();
+  if (!user) { renderAuth(); return; }
+  appEl.innerHTML = shell(user);
+  renderModal();
+  cloud.renderPending = false;
+  updateSyncBadge();
+}
+function content(user){
+  if (state.view === 'session') return sessionFormView(user);
+  if (user.role === 'coach') {
+    if (state.view === 'athletes') return coachAthletesView(user);
+    if (state.view === 'athlete') return coachAthleteView(user);
+    if (state.view === 'sessions') return coachSessionsView(user);
+    if (state.view === 'attendance') return coachAttendanceView(user);
+    if (state.view === 'profile') return profileView(user);
+    return coachHome(user);
+  }
+  if (state.view === 'log') return athleteLogView(user);
+  if (state.view === 'target') return athleteTargetView(user);
+  if (state.view === 'quota') return athleteQuotaView(user);
+  if (state.view === 'profile') return profileView(user);
+  return athleteHome(user);
+}
+
+/* ================= shared UI ================= */
+function emptyState(icon, title, text){
+  return `<div class="empty"><div class="empty-icon">${icon}</div><h3>${esc(title)}</h3><p>${esc(text)}</p></div>`;
+}
+function statCard(icon, value, label, tone){
+  return `<div class="stat">
+    <div class="stat-icon ${tone || ''}">${icon}</div>
+    <div><div class="stat-value">${esc(value)}</div><div class="stat-label">${esc(label)}</div></div>
+  </div>`;
+}
+function entryChips(entries){
+  const list = ACTIVITIES.filter(a => entries && entries[a.key]).map(a => {
+    const e = entries[a.key];
+    const value = a.fields.filter(f => e[f.key] != null).map(f => formatNum(e[f.key]) + ' ' + f.unit).join(' · ');
+    return `<span class="chip">${a.icon} ${esc(a.name)}: <strong>${esc(value)}</strong></span>`;
+  });
+  return list.length ? list.join('') : '<span class="muted" style="font-size:12px">Tidak ada detail latihan</span>';
+}
+function targetChips(items){
+  const list = ACTIVITIES.filter(a => items && items[a.key]).map(a => {
+    const t = items[a.key];
+    const value = a.fields.filter(f => t[f.key] != null).map(f => formatNum(t[f.key]) + ' ' + f.unit).join(' · ');
+    return `<span class="chip">${a.icon} ${esc(a.name)}: <strong>${esc(value)}</strong></span>`;
+  });
+  return list.length ? list.join('') : '<span class="muted" style="font-size:12px">Tidak ada target</span>';
+}
+function targetItem(a, t, entry){
+  const fields = a.fields.filter(f => t[f.key] != null);
+  const value = fields.map(f => formatNum(t[f.key]) + ' ' + f.unit).join(' · ');
+  let tag;
+  if (entry) {
+    const ok = fields.every(f => entry[f.key] != null && Number(entry[f.key]) >= Number(t[f.key]));
+    tag = ok ? '<span class="tag ok">✓ Tercapai</span>' : '<span class="tag no">Belum</span>';
+  } else {
+    tag = '<span class="tag">Belum dicoba</span>';
+  }
+  return `<div class="target-item">
+    <span class="t-icon">${a.icon}</span>
+    <div class="t-main"><div class="t-name">${esc(a.name)}</div><div class="t-val">${esc(value)}</div></div>
+    ${tag}
+  </div>`;
+}
+function targetCard(target, latestSession, opts){
+  opts = opts || {};
+  const items = ACTIVITIES.filter(a => target.items && target.items[a.key]);
+  const latestEntries = latestSession && latestSession.entries ? latestSession.entries : null;
+  return `<div class="card target-card">
+    <div class="target-head">
+      <div>
+        <h3>🎯 Target aktif</h3>
+        <p class="muted">Ditetapkan ${esc(fmtDateShort(isoFromTs(target.createdAt)))}${target.note ? ' · ' + esc(target.note) : ''}</p>
+      </div>
+      ${opts.editable ? `<button type="button" class="btn btn-soft btn-sm" data-action="open-target" data-athlete="${target.athleteId}">Perbarui</button>` : ''}
+    </div>
+    <div class="target-grid">${items.map(a => targetItem(a, target.items[a.key], latestEntries ? latestEntries[a.key] : null)).join('')}</div>
+  </div>`;
+}
+function emptyTargetCard(athleteId){
+  return `<div class="empty">
+    <div class="empty-icon">🎯</div>
+    <h3>Belum ada target</h3>
+    <p>Tetapkan target agar atlet punya arahan latihan yang jelas.</p>
+    <button type="button" class="btn btn-primary btn-sm" style="margin-top:14px" data-action="open-target" data-athlete="${athleteId}">Atur Target</button>
+  </div>`;
+}
+function sessionCard(s, opts){
+  opts = opts || {};
+  const athlete = opts.showAthlete ? getUserById(s.athleteId) : null;
+  const comments = getComments().filter(c => c.sessionId === s.id);
+  const parts = s.date.split('-');
+  const day = Number(parts[2]);
+  const month = MONTHS_SHORT[Number(parts[1]) - 1] || '';
+  return `<article class="session-card card" data-action="open-session" data-id="${s.id}" role="button" tabindex="0">
+    <div class="session-head">
+      <div class="date-chip"><span class="date-day">${day}</span><span class="date-mon">${esc(month)}</span></div>
+      <div class="session-title">
+        ${athlete ? `<div class="session-athlete">${esc(athlete.name)}</div>` : ''}
+        <div class="session-date">${esc(fmtDate(s.date))}${s.updatedAt ? ' · diedit' : ''}</div>
+      </div>
+      <div class="session-meta">
+        ${comments.length ? `<span class="pill comment-pill">💬 ${comments.length}</span>` : ''}
+        <span class="chev">›</span>
+      </div>
+    </div>
+    <div class="chips">${entryChips(s.entries)}</div>
+    ${s.notes ? `<p class="session-note">📝 ${esc(s.notes)}</p>` : ''}
+    ${opts.actions ? `<div class="card-actions">
+      <button type="button" class="btn btn-ghost btn-xs" data-action="open-session" data-id="${s.id}">Detail</button>
+      <button type="button" class="btn btn-ghost btn-xs" data-action="edit-session" data-id="${s.id}">Edit</button>
+      <button type="button" class="btn btn-danger btn-xs" data-action="delete-session" data-id="${s.id}">Hapus</button>
+    </div>` : ''}
+  </article>`;
+}
+
+/* ================= coach home ================= */
+function coachHome(user){
+  const athletes = getUsers().filter(u => u.role === 'athlete' && u.coachId === user.id);
+  const ids = new Set(athletes.map(a => a.id));
+  const allSessions = getSessions().filter(s => ids.has(s.athleteId));
+  const sessions = allSessions.slice().sort(byDateDesc);
+  const weekCount = sessions.filter(s => isThisWeek(s.date)).length;
+  const todayCount = sessions.filter(s => s.date === todayISO()).length;
+  const commentCount = getComments().filter(c => allSessions.some(s => s.id === c.sessionId)).length;
+  const recent = sessions.slice(0, 5);
+  const lowQuota = athletes.filter(a => {
+    const q = quotaSummary(a.id);
+    return q.remaining <= 2 && (q.purchased > 0 || q.remaining < 0);
+  });
+
+  return `
+  <div class="page-head">
+    <div>
+      <div class="eyebrow">${esc(fmtDate(todayISO()))}</div>
+      <h1>Halo, ${esc(coachLabel(user.name))} 👋</h1>
+      <p class="muted">Pantau perkembangan atlet panahanmu dari satu tempat.</p>
+    </div>
+    <button type="button" class="btn btn-primary" data-action="new-athlete">＋ Tambah Atlet</button>
+  </div>
+
+  <div class="stats">
+    ${statCard('🎯', athletes.length, 'Atlet binaan')}
+    ${statCard('📅', weekCount, 'Sesi minggu ini', 'green')}
+    ${statCard('🔥', todayCount, 'Sesi hari ini', 'blue')}
+    ${statCard('💬', commentCount, 'Komentar diberikan', 'violet')}
+  </div>
+
+  ${lowQuota.length ? `<div class="card quota-alert">🎟️ <strong>Kuota menipis:</strong> ${lowQuota.map(a => {
+    const q = quotaSummary(a.id);
+    return esc(a.name) + ' (' + formatNum(q.remaining) + ' tersisa)';
+  }).join(', ')}. <button type="button" class="link-btn" data-action="nav" data-view="attendance">Kelola absensi →</button></div>` : ''}
+
+  <section class="section">
+    <div class="section-head">
+      <h2>Aktivitas terbaru</h2>
+      <button type="button" class="link-btn" data-action="nav" data-view="sessions">Lihat semua →</button>
+    </div>
+    ${recent.length
+      ? `<div class="session-list">${recent.map(s => sessionCard(s, { showAthlete: true })).join('')}</div>`
+      : emptyState('🏹', 'Belum ada sesi latihan', 'Tambahkan atlet, lalu atlet bisa mulai mencatat latihannya.')}
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>Atlet binaan</h2>
+      <button type="button" class="link-btn" data-action="nav" data-view="athletes">Kelola atlet →</button>
+    </div>
+    ${athletes.length
+      ? `<div class="athlete-grid">${athletes.map(a => athleteCard(a)).join('')}</div>`
+      : emptyState('👥', 'Belum ada atlet', 'Klik “Tambah Atlet” untuk membuat akun atlet pertamamu.')}
+  </section>`;
+}
+function athleteCard(a){
+  const sessions = getSessions().filter(s => s.athleteId === a.id);
+  const last = sessions.slice().sort(byDateDesc)[0];
+  const weekCount = sessions.filter(s => isThisWeek(s.date)).length;
+  const q = quotaSummary(a.id);
+  return `<article class="athlete-card card" data-action="select-athlete" data-id="${a.id}" role="button" tabindex="0">
+    <div class="athlete-top">
+      <div class="avatar lg">${esc(initials(a.name))}</div>
+      <div><div class="athlete-name">${esc(a.name)}</div><div class="athlete-user">@${esc(a.username)}</div></div>
+    </div>
+    <div class="athlete-stats">
+      <span><strong>${sessions.length}</strong> sesi</span>
+      <span><strong>${weekCount}</strong> minggu ini</span>
+    </div>
+    <div class="athlete-last">${last ? 'Terakhir latihan: ' + esc(fmtDateShort(last.date)) : 'Belum ada sesi latihan'} · Kuota: <strong style="color:var(--text)">${formatNum(q.remaining)}</strong> pertemuan</div>
+  </article>`;
+}
+
+/* ================= athlete home ================= */
+function athleteHome(user){
+  const sessions = getSessions().filter(s => s.athleteId === user.id).sort(byDateDesc);
+  const latest = sessions[0] || null;
+  const monthCount = sessions.filter(s => isThisMonth(s.date)).length;
+  const totalKm = sumEntries(sessions, 'run', 'km');
+  const totalPushup = sumEntries(sessions, 'pushup', 'reps');
+  const totalArrows = sumEntries(sessions, 'archery', 'arrows');
+  const target = activeTarget(user.id);
+  const coach = getUserById(user.coachId);
+  const myIds = new Set(sessions.map(s => s.id));
+  const recentComments = getComments()
+    .filter(c => myIds.has(c.sessionId))
+    .sort((a, b) => b.createdAt - a.createdAt)
+    .slice(0, 3);
+
+  return `
+  <div class="page-head">
+    <div>
+      <div class="eyebrow">${esc(fmtDate(todayISO()))}</div>
+      <h1>Semangat, ${esc(firstName(user.name))}! 🏹</h1>
+      <p class="muted">${coach ? 'Atlet binaan ' + esc(coachLabel(coach.name)) : 'Catat dan pantau latihanmu di sini.'}</p>
+    </div>
+  </div>
+
+  <div class="hero-cta card">
+    <div>
+      <div class="eyebrow">Siap latihan?</div>
+      <h2>Catat sesi latihan hari ini</h2>
+      <p class="muted">Memanah, lari, plank, push-up, angkat beban, dan bergelantungan.</p>
+    </div>
+    <button type="button" class="btn btn-primary" data-action="new-session">＋ Catat Latihan</button>
+  </div>
+
+  <section class="section">
+    <div class="section-head">
+      <h2>Kuota latihan bersama coach</h2>
+      <button type="button" class="link-btn" data-action="nav" data-view="quota">Lihat detail →</button>
+    </div>
+    ${quotaCard(user)}
+  </section>
+
+  <div class="stats">
+    ${statCard('📅', monthCount, 'Sesi bulan ini')}
+    ${statCard('🏁', sessions.length, 'Total sesi', 'green')}
+    ${statCard('🏃', formatNum(totalKm) + ' km', 'Total jarak lari', 'blue')}
+    ${statCard('💪', formatNum(totalPushup) + 'x', 'Total push-up', 'violet')}
+    ${statCard('🎯', formatNum(totalArrows) + 'x', 'Total anak panah', 'green')}
+  </div>
+
+  <section class="section">
+    <div class="section-head"><h2>Target dari pelatih</h2></div>
+    ${target ? targetCard(target, latest) : emptyState('🎯', 'Belum ada target', 'Pelatihmu belum menetapkan target latihan.')}
+  </section>
+
+  ${recentComments.length ? `<section class="section">
+    <div class="section-head"><h2>Komentar terbaru</h2></div>
+    <div class="session-list">
+      ${recentComments.map(c => {
+        const s = sessions.find(x => x.id === c.sessionId);
+        if (!s) return '';
+        return `<article class="session-card card" data-action="open-session" data-id="${s.id}" role="button" tabindex="0">
+          <div class="comment-top" style="margin-bottom:6px">
+            <span class="comment-name">💬 ${esc(fmtDateShort(s.date))}</span>
+            <span class="comment-time">${esc(fmtDateTime(c.createdAt))}</span>
+          </div>
+          <p class="comment-text">${esc(c.text)}</p>
+        </article>`;
+      }).join('')}
+    </div>
+  </section>` : ''}
+
+  <section class="section">
+    <div class="section-head">
+      <h2>Latihan terakhir</h2>
+      <button type="button" class="link-btn" data-action="nav" data-view="log">Lihat riwayat →</button>
+    </div>
+    ${sessions.length
+      ? `<div class="session-list">${sessions.slice(0, 4).map(s => sessionCard(s)).join('')}</div>`
+      : emptyState('🏋️', 'Belum ada latihan', 'Klik “Catat Latihan” untuk menyimpan sesi pertamamu.')}
+  </section>`;
+}
+
+/* ================= coach: athletes ================= */
+function coachAthletesView(user){
+  const athletes = getUsers().filter(u => u.role === 'athlete' && u.coachId === user.id);
+  return `
+  <div class="page-head">
+    <div>
+      <div class="eyebrow">Binaan</div>
+      <h1>Atlet Binaan</h1>
+      <p class="muted">${athletes.length} atlet terdaftar di bawah akunmu.</p>
+    </div>
+    <button type="button" class="btn btn-primary" data-action="new-athlete">＋ Tambah Atlet</button>
+  </div>
+  ${athletes.length
+    ? `<div class="athlete-grid">${athletes.map(a => athleteCard(a)).join('')}</div>`
+    : emptyState('👥', 'Belum ada atlet', 'Buat akun atlet pertamamu dengan tombol “Tambah Atlet”.')}`;
+}
+
+function coachAthleteView(user){
+  const athlete = getUserById(state.athleteId);
+  const back = `<button type="button" class="back" data-action="nav" data-view="athletes">← Kembali ke daftar atlet</button>`;
+  if (!athlete || athlete.role !== 'athlete' || athlete.coachId !== user.id) {
+    return back + emptyState('🔒', 'Atlet tidak ditemukan', 'Atlet ini bukan bagian dari binaanmu.');
+  }
+  const sessions = getSessions().filter(s => s.athleteId === athlete.id).sort(byDateDesc);
+  const latest = sessions[0] || null;
+  const target = activeTarget(athlete.id);
+  const weekCount = sessions.filter(s => isThisWeek(s.date)).length;
+  const quota = quotaSummary(athlete.id);
+  const age = athlete.birthDate ? calcAge(athlete.birthDate) : (athlete.age != null ? athlete.age : null);
+  const duration = trainingDuration(athlete.startDate);
+  const totalMeetings = totalAttendanceSessions(athlete.id);
+  return `
+  ${back}
+  <div class="page-head">
+    <div class="profile-card" style="margin-bottom:0">
+      <div class="avatar xl">${esc(initials(athlete.name))}</div>
+      <div>
+        <h1 style="margin:0 0 2px;font-size:26px">${esc(athlete.name)}</h1>
+        <div class="muted" style="font-size:13px">@${esc(athlete.username)} · Bergabung ${esc(fmtDateShort(isoFromTs(athlete.createdAt)))}</div>
+        <div style="margin-top:8px;display:flex;gap:14px;font-size:12.5px;color:var(--muted);flex-wrap:wrap">
+          <span><strong style="color:var(--text)">${sessions.length}</strong> sesi</span>
+          <span><strong style="color:var(--text)">${weekCount}</strong> minggu ini</span>
+          <span>${latest ? 'Terakhir: <strong style="color:var(--text)">' + esc(fmtDateShort(latest.date)) + '</strong>' : 'Belum ada sesi'}</span>
+        </div>
+        <div class="profile-rows">
+          <div class="kv"><span>Tanggal lahir</span><strong>${athlete.birthDate ? esc(fmtDateShort(athlete.birthDate)) : '-'}</strong></div>
+          <div class="kv"><span>Usia</span><strong>${esc(formatAge(age))}</strong></div>
+          <div class="kv"><span>Mulai latihan</span><strong>${athlete.startDate ? esc(fmtDateShort(athlete.startDate)) : '-'}</strong></div>
+          <div class="kv"><span>Sudah latihan</span><strong>${duration ? esc(duration.text) : '-'}</strong></div>
+          <div class="kv"><span>Total pertemuan</span><strong>${formatNum(totalMeetings)} x pertemuan</strong></div>
+          <div class="kv"><span>No. HP</span><strong>${athlete.phone ? esc(athlete.phone) : '-'}</strong></div>
+          <div class="kv"><span>Alamat</span><strong>${athlete.address ? esc(athlete.address) : '-'}</strong></div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button type="button" class="btn btn-primary" data-action="new-session" data-athlete="${athlete.id}">＋ Catat Sesi</button>
+      <button type="button" class="btn btn-soft" data-action="open-target" data-athlete="${athlete.id}">🎯 ${target ? 'Perbarui Target' : 'Atur Target'}</button>
+    </div>
+  </div>
+
+  <section class="section">
+    <div class="section-head"><h2>Target latihan</h2></div>
+    ${target ? targetCard(target, latest, { editable: true }) : emptyTargetCard(athlete.id)}
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h2>Kuota & absensi</h2><span class="muted" style="font-size:12.5px">${quota.used} pertemuan hadir</span></div>
+    ${quotaCard(athlete, { manage: true })}
+    <div class="grid-2" style="margin-top:14px">
+      <div class="card card-pad">
+        <h3>Riwayat absensi</h3>
+        <p>Kehadiran latihan bersama coach.</p>
+        ${attendanceList(athlete.id, { manage: true })}
+      </div>
+      <div class="card card-pad">
+        <h3>Riwayat paket</h3>
+        <p>Paket pertemuan yang sudah dibayar.</p>
+        ${packageList(athlete.id, { manage: true })}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h2>Riwayat sesi</h2><span class="muted" style="font-size:12.5px">${sessions.length} sesi</span></div>
+    ${sessions.length
+      ? `<div class="session-list">${sessions.map(s => sessionCard(s)).join('')}</div>`
+      : emptyState('📋', 'Belum ada sesi', 'Atlet belum mencatat latihan. Kamu juga bisa mencatatkan sesi untuknya.')}
+  </section>`;
+}
+
+function coachAttendanceView(user){
+  const athletes = getUsers().filter(u => u.role === 'athlete' && u.coachId === user.id);
+  const low = athletes.filter(a => {
+    const q = quotaSummary(a.id);
+    return q.remaining <= 2 && (q.purchased > 0 || q.remaining < 0);
+  });
+  const allAtt = getAttendance()
+    .filter(a => athletes.some(x => x.id === a.athleteId))
+    .sort(byDateDesc);
+  const allSessions = allAtt.reduce((acc, a) => acc + attendanceSessions(a), 0);
+  const all = allAtt.slice(0, 25);
+  return `
+  <div class="page-head">
+    <div>
+      <div class="eyebrow">Latihan bersama coach</div>
+      <h1>Absensi & Kuota</h1>
+      <p class="muted">Catat kehadiran latihan bersama coach dan pantau sisa pertemuan setiap atlet.</p>
+    </div>
+  </div>
+
+  ${low.length ? `<div class="card quota-alert">⚠️ <strong>Perhatian:</strong> ${low.map(a => {
+    const q = quotaSummary(a.id);
+    return esc(a.name) + ' (' + formatNum(q.remaining) + ' tersisa)';
+  }).join(', ')}. Segera ingatkan atlet untuk menambah paket.</div>` : ''}
+
+  <section class="section">
+    <div class="section-head"><h2>Kuota atlet</h2><span class="muted" style="font-size:12.5px">${athletes.length} atlet</span></div>
+    ${athletes.length
+      ? `<div class="grid-2">${athletes.map(a => quotaCard(a, { manage: true })).join('')}</div>`
+      : emptyState('👥', 'Belum ada atlet', 'Tambahkan atlet terlebih dahulu untuk mencatat absensi dan kuota.')}
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h2>Absensi terbaru</h2><span class="muted" style="font-size:12.5px">${allSessions} sesi · ${allAtt.length} catatan</span></div>
+    ${all.length ? `<div class="att-list">${all.map(a => {
+      const athlete = getUserById(a.athleteId);
+      return `<div class="att-row">
+        <span class="att-icon">✓</span>
+        <div class="att-main">
+          <div class="att-title">${esc(athlete ? athlete.name : 'Atlet')} · ${esc(fmtDate(a.date))}</div>
+          <div class="att-sub">${attendanceSessions(a)} sesi · ${attendanceHours(a)} jam${a.note ? ' · ' + esc(a.note) : ''}</div>
+        </div>
+        <button type="button" class="btn btn-danger btn-xs" data-action="delete-attendance" data-id="${a.id}">Hapus</button>
+      </div>`;
+    }).join('')}</div>` : '<p class="muted" style="font-size:12.5px">Belum ada absensi. Gunakan tombol “Tandai Hadir” pada kartu kuota atlet.</p>'}
+  </section>`;
+}
+
+function athleteQuotaView(user){
+  const coach = getUserById(user.coachId);
+  const q = quotaSummary(user.id);
+  return `
+  <div class="page-head">
+    <div>
+      <div class="eyebrow">Latihan bersama coach</div>
+      <h1>Kuota Latihan</h1>
+      <p class="muted">${coach ? 'Dengan ' + esc(coachLabel(coach.name)) + '. ' : ''}Pantau sisa pertemuan yang sudah dibayar.</p>
+    </div>
+  </div>
+
+  ${quotaCard(user)}
+
+  <section class="section" style="margin-top:26px">
+    <div class="section-head"><h2>Riwayat absensi</h2><span class="muted" style="font-size:12.5px">${q.used} pertemuan</span></div>
+    ${attendanceList(user.id)}
+  </section>
+
+  <section class="section">
+    <div class="section-head"><h2>Riwayat paket</h2><span class="muted" style="font-size:12.5px">${q.packages.length} paket</span></div>
+    ${packageList(user.id)}
+    <p class="form-hint" style="margin-top:10px">Pembayaran dan penambahan paket dilakukan oleh coach. Hubungi coach jika sisa kuota sudah menipis.</p>
+  </section>`;
+}
+
+function coachSessionsView(user){
+  const athletes = getUsers().filter(u => u.role === 'athlete' && u.coachId === user.id);
+  const ids = new Set(athletes.map(a => a.id));
+  let sessions = getSessions().filter(s => ids.has(s.athleteId));
+  const f = state.filters;
+  if (f.athleteId) sessions = sessions.filter(s => s.athleteId === f.athleteId);
+  if (f.from) sessions = sessions.filter(s => s.date >= f.from);
+  if (f.to) sessions = sessions.filter(s => s.date <= f.to);
+  sessions.sort(byDateDesc);
+
+  return `
+  <div class="page-head">
+    <div>
+      <div class="eyebrow">Semua catatan</div>
+      <h1>Sesi Latihan</h1>
+      <p class="muted">Lihat dan beri komentar pada sesi atlet binaanmu.</p>
+    </div>
+  </div>
+
+  <form class="filters card" data-form="filters">
+    <div class="field">
+      <label for="f-athlete">Atlet</label>
+      <select id="f-athlete" name="athleteId">
+        <option value="">Semua atlet</option>
+        ${athletes.map(a => `<option value="${a.id}" ${f.athleteId === a.id ? 'selected' : ''}>${esc(a.name)}</option>`).join('')}
+      </select>
+    </div>
+    <div class="field">
+      <label for="f-from">Dari tanggal</label>
+      <input type="date" id="f-from" name="from" value="${esc(f.from)}">
+    </div>
+    <div class="field">
+      <label for="f-to">Sampai tanggal</label>
+      <input type="date" id="f-to" name="to" value="${esc(f.to)}">
+    </div>
+    <div class="filter-actions">
+      <button type="submit" class="btn btn-primary btn-sm">Terapkan</button>
+      <button type="button" class="btn btn-ghost btn-sm" data-action="reset-filters">Reset</button>
+    </div>
+  </form>
+
+  ${sessions.length
+    ? `<div class="session-list">${sessions.map(s => sessionCard(s, { showAthlete: true })).join('')}</div>`
+    : emptyState('🔎', 'Tidak ada sesi', athletes.length ? 'Belum ada sesi yang cocok dengan filter ini.' : 'Belum ada atlet. Tambahkan atlet terlebih dahulu.')}`;
+}
+
+/* ================= athlete: log & target ================= */
+function athleteLogView(user){
+  const sessions = getSessions().filter(s => s.athleteId === user.id).sort(byDateDesc);
+  return `
+  <div class="page-head">
+    <div>
+      <div class="eyebrow">Jejak latihan</div>
+      <h1>Riwayat Latihan</h1>
+      <p class="muted">${sessions.length} sesi tercatat.</p>
+    </div>
+    <button type="button" class="btn btn-primary" data-action="new-session">＋ Catat Latihan</button>
+  </div>
+  ${sessions.length
+    ? `<div class="session-list">${sessions.map(s => sessionCard(s, { actions: true })).join('')}</div>`
+    : emptyState('🏋️', 'Belum ada latihan', 'Setiap sesi yang kamu catat akan muncul di sini.')}`;
+}
+
+function athleteTargetView(user){
+  const target = activeTarget(user.id);
+  const latest = getSessions().filter(s => s.athleteId === user.id).sort(byDateDesc)[0] || null;
+  const history = getTargets()
+    .filter(t => t.athleteId === user.id)
+    .sort((a, b) => b.createdAt - a.createdAt)
+    .slice(1);
+  const coach = getUserById(user.coachId);
+  return `
+  <div class="page-head">
+    <div>
+      <div class="eyebrow">Arahan pelatih</div>
+      <h1>Target Latihan</h1>
+      <p class="muted">${coach ? 'Ditetapkan oleh Coach ' + esc(coach.name) : 'Target latihanmu'}.</p>
+    </div>
+  </div>
+  ${target ? targetCard(target, latest) : emptyState('🎯', 'Belum ada target', 'Pelatihmu belum menetapkan target latihan.')}
+  ${history.length ? `<section class="section" style="margin-top:26px">
+    <div class="section-head"><h2>Riwayat target</h2></div>
+    <div class="session-list">
+      ${history.map(t => `<div class="card history-card">
+        <div class="session-date">Ditetapkan ${esc(fmtDateShort(isoFromTs(t.createdAt)))}${t.note ? ' · ' + esc(t.note) : ''}</div>
+        <div class="chips">${targetChips(t.items)}</div>
+      </div>`).join('')}
+    </div>
+  </section>` : ''}`;
+}
+
+/* ================= session form ================= */
+function activityField(a, entry){
+  const active = !!entry;
+  return `<div class="activity card ${active ? 'active' : ''}">
+    <label class="activity-head">
+      <input type="checkbox" data-activity-toggle="${a.key}" name="act_${a.key}" ${active ? 'checked' : ''}>
+      <span class="activity-icon">${a.icon}</span>
+      <span class="activity-name">${esc(a.name)}</span>
+      <span class="activity-check">✓</span>
+    </label>
+    <div class="activity-fields">
+      ${a.fields.some(f => f.optional) ? '<p class="activity-hint">Kolom di bawah opsional — isi yang sempat dicatat saja.</p>' : ''}
+      ${a.fields.map(f => `<div class="field">
+        <label for="in-${a.key}-${f.key}">${esc(f.label)} <span class="unit">(${esc(f.unit)})</span></label>
+        <input type="number" inputmode="decimal" id="in-${a.key}-${f.key}" name="entry_${a.key}_${f.key}"
+          min="0" step="${f.step || 1}" value="${entry && entry[f.key] != null ? esc(entry[f.key]) : ''}"
+          placeholder="${f.optional ? '-' : '0'}" ${active ? '' : 'disabled'}>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+function sessionFormView(user){
+  const draft = state.sessionDraft;
+  if (!draft) {
+    return emptyState('📝', 'Tidak ada sesi', 'Mulai sesi baru dari halaman Beranda.') +
+      `<div style="text-align:center;margin-top:16px"><button type="button" class="btn btn-primary" data-action="nav" data-view="home">Kembali</button></div>`;
+  }
+  const athlete = getUserById(draft.athleteId);
+  if (!athlete) {
+    return emptyState('🔒', 'Atlet tidak ditemukan', 'Sesi ini tidak bisa dibuka.');
+  }
+  if (user.role === 'athlete' && athlete.id !== user.id) {
+    return emptyState('🔒', 'Akses ditolak', 'Kamu hanya bisa mencatat sesi milikmu sendiri.');
+  }
+  if (user.role === 'coach' && athlete.coachId !== user.id) {
+    return emptyState('🔒', 'Akses ditolak', 'Atlet ini bukan bagian dari binaanmu.');
+  }
+  const entries = draft.entries || {};
+  const editing = !!draft.editingId;
+  return `
+  <button type="button" class="back" data-action="cancel-session">← Batal</button>
+  <div class="page-head">
+    <div>
+      <div class="eyebrow">${editing ? 'Edit sesi' : 'Sesi baru'}</div>
+      <h1>${editing ? 'Edit Latihan' : 'Catat Latihan'}</h1>
+      <p class="muted">${user.role === 'coach' ? 'Untuk <strong style="color:var(--text)">' + esc(athlete.name) + '</strong>' : 'Centang latihan yang kamu lakukan, lalu isi hasilnya.'}</p>
+    </div>
+  </div>
+  <form data-form="session" novalidate>
+    <div class="card" style="padding:16px;margin-bottom:16px">
+      <div class="field" style="max-width:280px">
+        <label for="session-date">Tanggal latihan</label>
+        <input type="date" id="session-date" name="date" value="${esc(draft.date || todayISO())}" max="${todayISO()}" required>
+      </div>
+    </div>
+    <div class="activity-list">${ACTIVITIES.map(a => activityField(a, entries[a.key])).join('')}</div>
+    <div class="card" style="padding:16px">
+      <div class="field">
+        <label for="session-notes">Catatan (opsional)</label>
+        <textarea id="session-notes" name="notes" rows="3" placeholder="Contoh: lari terasa ringan, bahu agak pegal setelah angkat beban...">${esc(draft.notes || '')}</textarea>
+      </div>
+    </div>
+    <div class="form-error" hidden style="margin-top:14px"></div>
+    <div class="form-actions">
+      <button type="button" class="btn btn-ghost" data-action="cancel-session">Batal</button>
+      <button type="submit" class="btn btn-primary">💾 Simpan Sesi</button>
+    </div>
+  </form>`;
+}
+
+/* ================= profile ================= */
+function profileView(user){
+  const joined = user.createdAt ? fmtDateShort(isoFromTs(user.createdAt)) : '-';
+  const coach = user.role === 'athlete' ? getUserById(user.coachId) : null;
+  const athleteCount = user.role === 'coach'
+    ? getUsers().filter(u => u.role === 'athlete' && u.coachId === user.id).length
+    : 0;
+  const age = user.birthDate ? calcAge(user.birthDate) : (user.age != null ? user.age : null);
+  const duration = trainingDuration(user.startDate);
+  const totalMeetings = user.role === 'athlete' ? totalAttendanceSessions(user.id) : 0;
+  return `
+  <div class="page-head">
+    <div><div class="eyebrow">Akun</div><h1>Profil</h1><p class="muted">Kelola akun dan data aplikasimu.</p></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button type="button" class="btn btn-soft" data-action="edit-profile">✏️ Edit Profil</button>
+      <button type="button" class="btn btn-ghost" data-action="logout">⏻ Keluar</button>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card card-pad">
+      <div class="profile-card">
+        <div class="avatar xl">${esc(initials(user.name))}</div>
+        <div>
+          <h2>${esc(user.name)}</h2>
+          <div class="muted" style="font-size:13px">@${esc(user.username)}</div>
+          <span class="role-badge ${user.role}">${user.role === 'coach' ? 'Pelatih' : 'Atlet'}</span>
+        </div>
+      </div>
+      <div class="kv"><span>Bergabung</span><strong>${esc(joined)}</strong></div>
+      ${user.role === 'coach'
+        ? `<div class="kv"><span>Atlet binaan</span><strong>${athleteCount} atlet</strong></div>`
+        : `<div class="kv"><span>Pelatih</span><strong>${coach ? esc(coach.name) : '-'}</strong></div>
+           <div class="kv"><span>Tanggal lahir</span><strong>${user.birthDate ? esc(fmtDateShort(user.birthDate)) : '-'}</strong></div>
+           <div class="kv"><span>Usia</span><strong>${esc(formatAge(age))}</strong></div>
+           <div class="kv"><span>Mulai latihan</span><strong>${user.startDate ? esc(fmtDateShort(user.startDate)) : '-'}</strong></div>
+           <div class="kv"><span>Sudah latihan</span><strong>${duration ? esc(duration.text) : '-'}</strong></div>
+           <div class="kv"><span>Total pertemuan</span><strong>${formatNum(totalMeetings)} x pertemuan</strong></div>
+           <div class="kv"><span>No. HP</span><strong>${user.phone ? esc(user.phone) : '-'}</strong></div>
+           <div class="kv"><span>Alamat</span><strong>${user.address ? esc(user.address) : '-'}</strong></div>`}
+      <div class="kv"><span>Penyimpanan</span><strong>Lokal di browser ini</strong></div>
+    </div>
+
+    <div class="card card-pad">
+      <h3>Ubah password</h3>
+      <p>Gunakan password yang mudah kamu ingat, minimal 6 karakter.</p>
+      <form data-form="password" class="stack" novalidate>
+        <div class="field">
+          <label for="pw-old">Password lama</label>
+          <input id="pw-old" name="oldPassword" type="password" autocomplete="current-password" required>
+        </div>
+        <div class="field">
+          <label for="pw-new">Password baru</label>
+          <input id="pw-new" name="newPassword" type="password" autocomplete="new-password" required>
+        </div>
+        <div class="field">
+          <label for="pw-new2">Konfirmasi password baru</label>
+          <input id="pw-new2" name="newPassword2" type="password" autocomplete="new-password" required>
+        </div>
+        <div class="form-error" hidden></div>
+        <div class="form-actions" style="margin-top:4px">
+          <button type="submit" class="btn btn-primary btn-sm">Simpan Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  ${user.role === 'coach' ? `<div class="card card-pad" style="margin-top:16px">
+    <h3>Cadangan data</h3>
+    <p>Unduh semua data (akun, sesi, target, komentar) ke file JSON. Impor kembali jika perlu memulihkan data.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button type="button" class="btn btn-soft btn-sm" data-action="export">⬇ Ekspor Data</button>
+      <button type="button" class="btn btn-ghost btn-sm" data-action="import-trigger">⬆ Impor Data</button>
+      <input type="file" id="import-file" accept="application/json,.json" hidden>
+    </div>
+    <p class="form-hint" style="margin-top:12px">Catatan: file cadangan berisi data akun termasuk password yang sudah di-hash. Simpan di tempat aman.</p>
+  </div>` : ''}
+
+  <div class="card app-info" style="margin-top:16px">
+    <strong>PanahLatih</strong> · Aplikasi pencatatan latihan atlet panahan.<br>
+    Semua data disimpan di penyimpanan lokal browser (localStorage) pada perangkat ini. Menghapus data browser dapat menghapus data aplikasi, jadi lakukan ekspor cadangan secara berkala.
+  </div>`;
+}
+
+/* ================= modals ================= */
+function renderModal(){
+  if (!state.modal) {
+    modalRoot.innerHTML = '';
+    document.body.classList.remove('modal-open');
+    return;
+  }
+  const user = currentUser();
+  if (!user) {
+    modalRoot.innerHTML = '';
+    document.body.classList.remove('modal-open');
+    return;
+  }
+  let html = '';
+  if (state.modal.type === 'session') html = sessionModal(user);
+  else if (state.modal.type === 'target') html = targetModal(user);
+  else if (state.modal.type === 'athlete-form') html = athleteFormModal(user);
+  else if (state.modal.type === 'package') html = packageModal(user);
+  else if (state.modal.type === 'attendance') html = attendanceModal(user);
+  else if (state.modal.type === 'profile') html = profileModal(user);
+  modalRoot.innerHTML = html;
+  document.body.classList.toggle('modal-open', !!html);
+}
+
+function detailRows(entries, target){
+  return ACTIVITIES.filter(a => entries && entries[a.key]).map(a => {
+    const e = entries[a.key];
+    const t = target && target.items ? target.items[a.key] : null;
+    const values = a.fields.filter(f => e[f.key] != null).map(f => `<span class="detail-val">${esc(formatNum(e[f.key]))} <small>${esc(f.unit)}</small></span>`).join('');
+    let compare = '';
+    if (t) {
+      compare = '<div class="cmp-row">' + a.fields.filter(f => t[f.key] != null).map(f => {
+        const ok = e[f.key] != null && Number(e[f.key]) >= Number(t[f.key]);
+        return `<span class="cmp ${ok ? 'ok' : 'no'}">${ok ? '✓' : '•'} target ${esc(formatNum(t[f.key]))} ${esc(f.unit)}</span>`;
+      }).join('') + '</div>';
+    }
+    return `<div class="detail-row">
+      <div class="detail-icon">${a.icon}</div>
+      <div class="detail-main">
+        <div class="detail-name">${esc(a.name)}</div>
+        <div class="detail-vals">${values}</div>
+        ${compare}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function sessionModal(user){
+  const s = getSessions().find(x => x.id === state.modal.id);
+  if (!s) { state.modal = null; return ''; }
+  const athlete = getUserById(s.athleteId);
+  const allowed = user.role === 'coach'
+    ? (athlete && athlete.coachId === user.id)
+    : (s.athleteId === user.id);
+  if (!allowed) { state.modal = null; return ''; }
+  const comments = getComments().filter(c => c.sessionId === s.id).sort((a, b) => a.createdAt - b.createdAt);
+  const target = activeTarget(s.athleteId);
+  const canComment = user.role === 'coach';
+
+  return `<div class="overlay" data-action="close-modal-bg">
+    <div class="modal card" role="dialog" aria-modal="true" aria-label="Detail sesi latihan">
+      <div class="modal-head">
+        <div>
+          <div class="eyebrow">${user.role === 'coach' && athlete ? esc(athlete.name) : 'Sesi latihan'}</div>
+          <h2>${esc(fmtDate(s.date))}</h2>
+        </div>
+        <button type="button" class="icon-btn" data-action="close-modal" aria-label="Tutup">✕</button>
+      </div>
+
+      <div class="detail-list">${detailRows(s.entries, target)}</div>
+
+      ${s.notes ? `<div class="note-box"><strong>Catatan atlet</strong><p>${esc(s.notes)}</p></div>` : ''}
+
+      <div class="comments">
+        <h3>💬 Komentar Pelatih</h3>
+        ${comments.length ? comments.map(c => {
+          const coach = getUserById(c.coachId);
+          return `<div class="comment">
+            <div class="avatar">${esc(initials(coach ? coach.name : '?'))}</div>
+            <div class="comment-body">
+              <div class="comment-top">
+                <span class="comment-name">${esc(coach ? coach.name : 'Pelatih')}</span>
+                <span class="comment-time">${esc(fmtDateTime(c.createdAt))}</span>
+              </div>
+              <p class="comment-text">${esc(c.text)}</p>
+            </div>
+          </div>`;
+        }).join('') : '<p class="muted" style="font-size:13px">Belum ada komentar untuk sesi ini.</p>'}
+        ${canComment ? `<form data-form="comment" class="comment-form" novalidate>
+          <input type="hidden" name="sessionId" value="${s.id}">
+          <textarea name="text" rows="2" maxlength="1000" placeholder="Tulis komentar atau evaluasi untuk sesi ini..." required></textarea>
+          <button type="submit" class="btn btn-primary btn-sm">Kirim</button>
+        </form>
+        <div class="form-error" hidden style="margin-top:10px"></div>` : ''}
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-ghost btn-sm" data-action="edit-session" data-id="${s.id}">Edit Sesi</button>
+        <button type="button" class="btn btn-danger btn-sm" data-action="delete-session" data-id="${s.id}">Hapus</button>
+        <button type="button" class="btn btn-soft btn-sm" data-action="close-modal">Tutup</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function targetModal(user){
+  const athlete = getUserById(state.modal.athleteId);
+  if (!athlete || athlete.role !== 'athlete' || athlete.coachId !== user.id) {
+    state.modal = null;
+    return '';
+  }
+  const current = activeTarget(athlete.id);
+  const items = current ? current.items : {};
+  return `<div class="overlay" data-action="close-modal-bg">
+    <div class="modal card" role="dialog" aria-modal="true" aria-label="Atur target latihan">
+      <div class="modal-head">
+        <div>
+          <div class="eyebrow">Target latihan</div>
+          <h2>${esc(athlete.name)}</h2>
+        </div>
+        <button type="button" class="icon-btn" data-action="close-modal" aria-label="Tutup">✕</button>
+      </div>
+      <p class="muted" style="font-size:13px">Isi angka target yang ingin dicapai. Kosongkan jenis latihan yang tidak ditargetkan.</p>
+      <p class="form-hint" style="margin:-6px 0 14px">Untuk Memanah, isi target jumlah anak panah per hari. Kolom lain seperti masuk target, miss, dan poin juga bisa dijadikan target.</p>
+      <form data-form="target" novalidate>
+        <input type="hidden" name="athleteId" value="${athlete.id}">
+        <div class="target-form-grid">
+          ${ACTIVITIES.map(a => `<div class="target-group">
+            <div class="target-group-head">${a.icon} ${esc(a.name)}</div>
+            <div class="target-inputs">
+              ${a.fields.map(f => `<div class="field">
+                <label for="t-${a.key}-${f.key}">${esc(f.label)} (${esc(f.unit)})</label>
+                <input type="number" inputmode="decimal" id="t-${a.key}-${f.key}" name="t_${a.key}_${f.key}"
+                  min="0" step="${f.step || 1}" placeholder="-"
+                  value="${items[a.key] && items[a.key][f.key] != null ? esc(items[a.key][f.key]) : ''}">
+              </div>`).join('')}
+            </div>
+          </div>`).join('')}
+        </div>
+        <div class="field">
+          <label for="target-note">Catatan target (opsional)</label>
+          <textarea id="target-note" name="note" rows="2" placeholder="Contoh: target bulan November">${esc(current && current.note ? current.note : '')}</textarea>
+        </div>
+        <div class="form-error" hidden style="margin-top:12px"></div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-ghost" data-action="close-modal">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan Target</button>
+        </div>
+      </form>
+    </div>
+  </div>`;
+}
+
+function athleteFormModal(user){
+  if (user.role !== 'coach') { state.modal = null; return ''; }
+  return `<div class="overlay" data-action="close-modal-bg">
+    <div class="modal card" role="dialog" aria-modal="true" aria-label="Tambah atlet">
+      <div class="modal-head">
+        <div>
+          <div class="eyebrow">Atlet baru</div>
+          <h2>Tambah Atlet</h2>
+        </div>
+        <button type="button" class="icon-btn" data-action="close-modal" aria-label="Tutup">✕</button>
+      </div>
+      <p class="muted" style="font-size:13px">Buat akun untuk atletmu. Bagikan username dan password agar atlet bisa masuk dan mencatat latihannya sendiri.</p>
+      <form data-form="athlete" class="stack" novalidate>
+        <div class="field">
+          <label for="ath-name">Nama lengkap</label>
+          <input id="ath-name" name="name" autocomplete="off" placeholder="Nama atlet" required>
+        </div>
+        <div class="field">
+          <label for="ath-username">Username</label>
+          <input id="ath-username" name="username" autocomplete="off" placeholder="huruf kecil, tanpa spasi" required>
+        </div>
+        <div class="field">
+          <label for="ath-pass">Password</label>
+          <input id="ath-pass" name="password" type="password" autocomplete="new-password" placeholder="Minimal 6 karakter" required>
+        </div>
+        <div class="field">
+          <label for="ath-pass2">Konfirmasi password</label>
+          <input id="ath-pass2" name="password2" type="password" autocomplete="new-password" placeholder="Ulangi password" required>
+        </div>
+        <div class="form-grid-2">
+          <div class="field">
+            <label for="ath-birth">Tanggal lahir <span class="unit">(opsional)</span></label>
+            <input id="ath-birth" name="birthDate" type="date" max="${todayISO()}">
+          </div>
+          <div class="field">
+            <label for="ath-start">Mulai ikut latihan <span class="unit">(opsional)</span></label>
+            <input id="ath-start" name="startDate" type="date" max="${todayISO()}">
+          </div>
+        </div>
+        <div class="field">
+          <label for="ath-phone">No. HP <span class="unit">(opsional)</span></label>
+          <input id="ath-phone" name="phone" type="tel" placeholder="08xx xxxx xxxx">
+        </div>
+        <div class="field">
+          <label for="ath-address">Alamat <span class="unit">(opsional)</span></label>
+          <input id="ath-address" name="address" placeholder="Kota / alamat singkat">
+        </div>
+        <div class="form-error" hidden></div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-ghost" data-action="close-modal">Batal</button>
+          <button type="submit" class="btn btn-primary">Buat Akun Atlet</button>
+        </div>
+      </form>
+    </div>
+  </div>`;
+}
+
+/* ================= actions ================= */
+function packageModal(user){
+  const athlete = getUserById(state.modal.athleteId);
+  if (!athlete || athlete.role !== 'athlete' || athlete.coachId !== user.id) {
+    state.modal = null;
+    return '';
+  }
+  const q = quotaSummary(athlete.id);
+  return `<div class="overlay" data-action="close-modal-bg">
+    <div class="modal card" role="dialog" aria-modal="true" aria-label="Tambah paket latihan">
+      <div class="modal-head">
+        <div>
+          <div class="eyebrow">Paket latihan</div>
+          <h2>${esc(athlete.name)}</h2>
+        </div>
+        <button type="button" class="icon-btn" data-action="close-modal" aria-label="Tutup">✕</button>
+      </div>
+      <div class="note-box" style="margin:0 0 16px">
+        Sisa kuota saat ini: <strong>${formatNum(q.remaining)}</strong> pertemuan
+        (dibeli ${formatNum(q.purchased)}, sudah hadir ${formatNum(q.used)}).
+      </div>
+      <form data-form="package" class="stack" novalidate>
+        <input type="hidden" name="athleteId" value="${athlete.id}">
+        <div class="field">
+          <label for="pkg-meetings">Jumlah pertemuan</label>
+          <input id="pkg-meetings" name="meetings" type="number" inputmode="numeric" min="1" step="1" placeholder="Contoh: 10" required>
+          <div class="package-presets">
+            <button type="button" class="btn btn-ghost" data-action="preset-meetings" data-value="1">1 pertemuan</button>
+            <button type="button" class="btn btn-ghost" data-action="preset-meetings" data-value="10">10 pertemuan</button>
+            <button type="button" class="btn btn-ghost" data-action="preset-meetings" data-value="20">20 pertemuan</button>
+          </div>
+        </div>
+        <div class="form-grid-2">
+          <div class="field">
+            <label for="pkg-paidat">Tanggal bayar</label>
+            <input id="pkg-paidat" name="paidAt" type="date" value="${todayISO()}" max="${todayISO()}">
+          </div>
+          <div class="field">
+            <label for="pkg-amount">Nominal <span class="unit">(opsional)</span></label>
+            <input id="pkg-amount" name="amount" type="number" inputmode="numeric" min="0" step="1000" placeholder="Contoh: 500000">
+          </div>
+        </div>
+        <div class="field">
+          <label for="pkg-note">Catatan <span class="unit">(opsional)</span></label>
+          <input id="pkg-note" name="note" maxlength="120" placeholder="Contoh: bayar tunai / transfer">
+        </div>
+        <div class="form-error" hidden></div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-ghost" data-action="close-modal">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan Paket</button>
+        </div>
+      </form>
+    </div>
+  </div>`;
+}
+
+function attendanceModal(user){
+  const athlete = getUserById(state.modal.athleteId);
+  if (!athlete || athlete.role !== 'athlete' || athlete.coachId !== user.id) {
+    state.modal = null;
+    return '';
+  }
+  const q = quotaSummary(athlete.id);
+  const warning = q.remaining <= 0
+    ? '<span style="color:#fca5a5">Kuota sudah habis atau minus. Absensi ini tetap dicatat dan sisa kuota akan bertambah minus sesuai jumlah sesi.</span>'
+    : 'Kuota akan berkurang sesuai jumlah sesi yang diisi. 1 sesi = 2 jam latihan.';
+  return `<div class="overlay" data-action="close-modal-bg">
+    <div class="modal card" role="dialog" aria-modal="true" aria-label="Tandai kehadiran latihan">
+      <div class="modal-head">
+        <div>
+          <div class="eyebrow">Absensi latihan</div>
+          <h2>${esc(athlete.name)}</h2>
+        </div>
+        <button type="button" class="icon-btn" data-action="close-modal" aria-label="Tutup">✕</button>
+      </div>
+      <div class="note-box" style="margin:0 0 16px">
+        Sisa kuota saat ini: <strong>${formatNum(q.remaining)}</strong> pertemuan.<br>
+        <span style="font-size:12.5px;color:var(--muted)">${warning}</span>
+      </div>
+      <form data-form="attendance" class="stack" novalidate>
+        <input type="hidden" name="athleteId" value="${athlete.id}">
+        <div class="field">
+          <label for="att-date">Tanggal latihan</label>
+          <input id="att-date" name="date" type="date" value="${todayISO()}" max="${todayISO()}" required>
+        </div>
+        <div class="field">
+          <label for="att-sessions">Jumlah sesi</label>
+          <input id="att-sessions" name="sessions" type="number" inputmode="numeric" min="1" max="12" step="1" value="1" required>
+          <div class="package-presets">
+            <button type="button" class="btn btn-soft" data-action="preset-sessions" data-sessions="1">1 sesi · 2 jam</button>
+            <button type="button" class="btn btn-soft" data-action="preset-sessions" data-sessions="2">2 sesi · 4 jam</button>
+            <button type="button" class="btn btn-soft" data-action="preset-sessions" data-sessions="3">3 sesi · 6 jam</button>
+            <button type="button" class="btn btn-soft" data-action="preset-sessions" data-sessions="4">4 sesi · 8 jam</button>
+          </div>
+          <p class="activity-hint" style="margin-top:8px">1 sesi = 2 jam. Kuota berkurang sebanyak jumlah sesi yang diisi.</p>
+        </div>
+        <div class="field">
+          <label for="att-note">Catatan <span class="unit">(opsional)</span></label>
+          <input id="att-note" name="note" maxlength="120" placeholder="Contoh: latihan teknik grip">
+        </div>
+        <div class="form-error" hidden></div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-ghost" data-action="close-modal">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan Absensi</button>
+        </div>
+      </form>
+    </div>
+  </div>`;
+}
+
+function profileModal(user){
+  return `<div class="overlay" data-action="close-modal-bg">
+    <div class="modal card" role="dialog" aria-modal="true" aria-label="Edit profil">
+      <div class="modal-head">
+        <div>
+          <div class="eyebrow">Data diri</div>
+          <h2>Edit Profil</h2>
+        </div>
+        <button type="button" class="icon-btn" data-action="close-modal" aria-label="Tutup">✕</button>
+      </div>
+      <form data-form="profile" class="stack" novalidate>
+        <div class="field">
+          <label for="prof-name">Nama lengkap</label>
+          <input id="prof-name" name="name" value="${esc(user.name)}" autocomplete="name" required>
+        </div>
+        ${user.role === 'athlete' ? `
+        <div class="form-grid-2">
+          <div class="field">
+            <label for="prof-birth">Tanggal lahir <span class="unit">(opsional)</span></label>
+            <input id="prof-birth" name="birthDate" type="date" max="${todayISO()}" value="${esc(user.birthDate || '')}">
+          </div>
+          <div class="field">
+            <label for="prof-start">Mulai ikut latihan <span class="unit">(opsional)</span></label>
+            <input id="prof-start" name="startDate" type="date" max="${todayISO()}" value="${esc(user.startDate || '')}">
+          </div>
+        </div>
+        <div class="field">
+          <label for="prof-phone">No. HP <span class="unit">(opsional)</span></label>
+          <input id="prof-phone" name="phone" type="tel" value="${esc(user.phone || '')}" placeholder="08xx xxxx xxxx">
+        </div>
+        <div class="field">
+          <label for="prof-address">Alamat <span class="unit">(opsional)</span></label>
+          <input id="prof-address" name="address" value="${esc(user.address || '')}" placeholder="Kota / alamat singkat">
+        </div>` : ''}
+        <p class="form-hint">Username tidak dapat diubah. Data diri hanya terlihat olehmu dan coach-mu.</p>
+        <div class="form-error" hidden></div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-ghost" data-action="close-modal">Batal</button>
+          <button type="submit" class="btn btn-primary">Simpan Profil</button>
+        </div>
+      </form>
+    </div>
+  </div>`;
+}
+
+function startNewSession(user, athleteId){
+  const targetId = athleteId || (user.role === 'athlete' ? user.id : null);
+  if (!targetId) { toast('Pilih atlet terlebih dahulu.'); return; }
+  state.sessionDraft = {
+    athleteId: targetId,
+    editingId: null,
+    date: todayISO(),
+    entries: {},
+    notes: '',
+    returnView: user.role === 'coach' ? 'athlete' : 'home'
+  };
+  state.view = 'session';
+  state.modal = null;
+  render();
+  scrollTop();
+}
+
+document.addEventListener('click', (e) => {
+  const el = e.target.closest('[data-action]');
+  if (!el) return;
+  const action = el.dataset.action;
+  const user = currentUser();
+
+  if (action === 'auth-tab') {
+    state.loginTab = el.dataset.tab === 'register' ? 'register' : 'login';
+    renderAuth();
+    return;
+  }
+  if (action === 'logout') {
+    stopCloud();
+    localStorage.removeItem(LS.auth);
+    state.view = 'home';
+    state.modal = null;
+    state.sessionDraft = null;
+    state.athleteId = null;
+    state.loginTab = 'login';
+    state.filters = { athleteId: '', from: '', to: '' };
+    renderAuth();
+    toast('Kamu sudah keluar.');
+    return;
+  }
+  if (action === 'sync-info') {
+    showCloudInfo();
+    return;
+  }
+  if (!user) return;
+
+  switch (action) {
+    case 'nav': {
+      const view = el.dataset.view;
+      if (view === 'session') { startNewSession(user); return; }
+      state.view = view;
+      state.modal = null;
+      state.sessionDraft = null;
+      if (view !== 'athlete') state.athleteId = null;
+      render();
+      scrollTop();
+      return;
+    }
+    case 'select-athlete': {
+      if (user.role !== 'coach') return;
+      state.view = 'athlete';
+      state.athleteId = el.dataset.id;
+      state.modal = null;
+      render();
+      scrollTop();
+      return;
+    }
+    case 'open-session': {
+      const s = getSessions().find(x => x.id === el.dataset.id);
+      if (!s) { toast('Sesi tidak ditemukan.'); return; }
+      const allowed = user.role === 'coach'
+        ? (getUserById(s.athleteId) || {}).coachId === user.id
+        : s.athleteId === user.id;
+      if (!allowed) { toast('Kamu tidak punya akses ke sesi ini.'); return; }
+      state.modal = { type: 'session', id: s.id };
+      renderModal();
+      return;
+    }
+    case 'close-modal':
+      state.modal = null;
+      renderModal();
+      return;
+    case 'close-modal-bg':
+      if (e.target === el) { state.modal = null; renderModal(); }
+      return;
+    case 'new-session':
+      startNewSession(user, el.dataset.athlete);
+      return;
+    case 'edit-session': {
+      const s = getSessions().find(x => x.id === el.dataset.id);
+      if (!s) return;
+      const allowed = user.role === 'coach'
+        ? (getUserById(s.athleteId) || {}).coachId === user.id
+        : s.athleteId === user.id;
+      if (!allowed) { toast('Kamu tidak punya akses ke sesi ini.'); return; }
+      state.sessionDraft = {
+        athleteId: s.athleteId,
+        editingId: s.id,
+        date: s.date,
+        entries: JSON.parse(JSON.stringify(s.entries || {})),
+        notes: s.notes || '',
+        returnView: user.role === 'coach' ? 'athlete' : 'log'
+      };
+      state.view = 'session';
+      state.modal = null;
+      render();
+      scrollTop();
+      return;
+    }
+    case 'delete-session': {
+      const s = getSessions().find(x => x.id === el.dataset.id);
+      if (!s) return;
+      const allowed = user.role === 'coach'
+        ? (getUserById(s.athleteId) || {}).coachId === user.id
+        : s.athleteId === user.id;
+      if (!allowed) { toast('Kamu tidak punya akses ke sesi ini.'); return; }
+      if (!confirm('Hapus sesi ini? Komentar pada sesi ini juga akan dihapus.')) return;
+      saveSessions(getSessions().filter(x => x.id !== s.id));
+      saveComments(getComments().filter(c => c.sessionId !== s.id));
+      state.modal = null;
+      toast('Sesi latihan dihapus.');
+      render();
+      return;
+    }
+    case 'cancel-session': {
+      const draft = state.sessionDraft;
+      state.sessionDraft = null;
+      if (draft && draft.returnView === 'athlete' && draft.athleteId) {
+        state.view = 'athlete';
+        state.athleteId = draft.athleteId;
+      } else {
+        state.view = draft && draft.returnView ? draft.returnView : 'home';
+      }
+      render();
+      scrollTop();
+      return;
+    }
+    case 'new-athlete':
+      if (user.role !== 'coach') return;
+      state.modal = { type: 'athlete-form' };
+      renderModal();
+      return;
+    case 'open-target': {
+      if (user.role !== 'coach') return;
+      const athlete = getUserById(el.dataset.athlete);
+      if (!athlete || athlete.coachId !== user.id) return;
+      state.modal = { type: 'target', athleteId: athlete.id };
+      renderModal();
+      return;
+    }
+    case 'open-package': {
+      if (user.role !== 'coach') return;
+      const athlete = getUserById(el.dataset.athlete);
+      if (!athlete || athlete.coachId !== user.id) return;
+      state.modal = { type: 'package', athleteId: athlete.id };
+      renderModal();
+      return;
+    }
+    case 'open-attendance': {
+      if (user.role !== 'coach') return;
+      const athlete = getUserById(el.dataset.athlete);
+      if (!athlete || athlete.coachId !== user.id) return;
+      state.modal = { type: 'attendance', athleteId: athlete.id };
+      renderModal();
+      return;
+    }
+    case 'preset-meetings': {
+      const input = document.getElementById('pkg-meetings');
+      if (input) { input.value = el.dataset.value || ''; input.focus(); }
+      return;
+    }
+    case 'preset-sessions': {
+      const input = document.getElementById('att-sessions');
+      if (input) { input.value = el.dataset.sessions || '1'; input.focus(); }
+      return;
+    }
+    case 'delete-package': {
+      if (user.role !== 'coach') return;
+      const pkg = getPackages().find(p => p.id === el.dataset.id);
+      if (!pkg) return;
+      const athlete = getUserById(pkg.athleteId);
+      if (!athlete || athlete.coachId !== user.id) return;
+      if (!confirm('Hapus paket ' + pkg.meetings + ' pertemuan ini? Sisa kuota akan berkurang.')) return;
+      savePackages(getPackages().filter(p => p.id !== pkg.id));
+      toast('Paket dihapus.');
+      render();
+      return;
+    }
+    case 'delete-attendance': {
+      if (user.role !== 'coach') return;
+      const att = getAttendance().find(a => a.id === el.dataset.id);
+      if (!att) return;
+      const athlete = getUserById(att.athleteId);
+      if (!athlete || athlete.coachId !== user.id) return;
+      const sesi = attendanceSessions(att);
+      if (!confirm('Hapus absensi tanggal ' + fmtDateShort(att.date) + ' (' + sesi + ' sesi)? Kuota akan bertambah ' + sesi + ' pertemuan.')) return;
+      saveAttendance(getAttendance().filter(a => a.id !== att.id));
+      toast('Absensi dihapus.');
+      render();
+      return;
+    }
+    case 'edit-profile':
+      state.modal = { type: 'profile' };
+      renderModal();
+      return;
+    case 'export':
+      if (user.role === 'coach') exportData();
+      return;
+    case 'import-trigger': {
+      if (user.role !== 'coach') return;
+      const input = document.getElementById('import-file');
+      if (input) input.click();
+      return;
+    }
+    case 'reset-filters':
+      state.filters = { athleteId: '', from: '', to: '' };
+      render();
+      return;
+  }
+});
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && state.modal) {
+    state.modal = null;
+    renderModal();
+  }
+  if (e.key === 'Enter') {
+    const t = e.target;
+    if (t && t.matches && t.matches('[data-action="open-session"],[data-action="select-athlete"]')) {
+      e.preventDefault();
+      t.click();
+    }
+  }
+});
+
+document.addEventListener('change', (e) => {
+  const toggle = e.target.closest ? e.target.closest('[data-activity-toggle]') : null;
+  if (toggle) {
+    const card = toggle.closest('.activity');
+    if (card) {
+      card.classList.toggle('active', toggle.checked);
+      card.querySelectorAll('.activity-fields input').forEach(inp => { inp.disabled = !toggle.checked; });
+      if (toggle.checked) {
+        const first = card.querySelector('.activity-fields input');
+        if (first) first.focus();
+      }
+    }
+  }
+  if (e.target && e.target.id === 'import-file') {
+    const file = e.target.files && e.target.files[0];
+    e.target.value = '';
+    if (file) importFile(file);
+  }
+});
+
+/* ================= form handlers ================= */
+document.addEventListener('submit', async (e) => {
+  const form = e.target.closest('form[data-form]');
+  if (!form) return;
+  e.preventDefault();
+  clearError(form);
+  const type = form.dataset.form;
+  try {
+    if (type === 'setup') await handleSetup(form);
+    else if (type === 'login') await handleLogin(form);
+    else if (type === 'register') await handleRegister(form);
+    else if (type === 'athlete') await handleAthleteCreate(form);
+    else if (type === 'session') handleSessionSave(form);
+    else if (type === 'comment') handleComment(form);
+    else if (type === 'target') handleTargetSave(form);
+    else if (type === 'package') handlePackageSave(form);
+    else if (type === 'attendance') handleAttendanceSave(form);
+    else if (type === 'profile') handleProfileSave(form);
+    else if (type === 'password') await handlePassword(form);
+    else if (type === 'filters') handleFilters(form);
+  } catch (err) {
+    console.error(err);
+    setError(form, 'Terjadi kesalahan. Coba lagi.');
+  }
+});
+
+async function handleSetup(form){
+  const fd = new FormData(form);
+  const name = String(fd.get('name') || '').trim();
+  const username = normalizeUsername(fd.get('username'));
+  const pw = String(fd.get('password') || '');
+  const pw2 = String(fd.get('password2') || '');
+  if (name.length < 2) return setError(form, 'Nama minimal 2 karakter.');
+  if (!isValidUsername(username)) return setError(form, 'Username 3–20 karakter, hanya huruf kecil, angka, titik, atau garis bawah.');
+  if (pw.length < 6) return setError(form, 'Password minimal 6 karakter.');
+  if (pw !== pw2) return setError(form, 'Konfirmasi password tidak sama.');
+  const users = getUsers();
+  if (users.some(u => u.username.toLowerCase() === username)) return setError(form, 'Username sudah dipakai.');
+  setBusy(form, true, 'Membuat akun…');
+  try {
+    if (await cloudUsernameTaken(username)) return setError(form, 'Username sudah dipakai.');
+    const coach = {
+      id: uid(), name, username, pwHash: await hashPassword(pw),
+      role: 'coach', createdAt: Date.now()
+    };
+    users.push(coach);
+    saveUsers(users);
+    localStorage.setItem(LS.auth, coach.id);
+    state.view = 'home';
+    state.loginTab = 'login';
+    toast('Akun pelatih berhasil dibuat. Selamat datang!');
+    render();
+    await startCloud(coach.id, coach);
+    await cloudWriteLookup(coach, coach.id);
+  } finally {
+    setBusy(form, false);
+  }
+}
+
+async function handleLogin(form){
+  const fd = new FormData(form);
+  const username = normalizeUsername(fd.get('username'));
+  const pw = String(fd.get('password') || '');
+  if (!username || !pw) return setError(form, 'Isi username dan password.');
+  setBusy(form, true, 'Memeriksa…');
+  try {
+    let user = getUsers().find(u => u.username.toLowerCase() === username);
+    let wid = null;
+    let found = null;
+    if (!user || !(await verifyPassword(pw, user.pwHash))) {
+      found = await cloudFindUser(username);
+    }
+    if (found && found.user && await verifyPassword(pw, found.user.pwHash)) {
+      user = found.user;
+      wid = found.wid;
+      const users = getUsers();
+      const index = users.findIndex(u => u.id === user.id || (u.username && u.username.toLowerCase() === username));
+      if (index >= 0) users[index] = Object.assign({}, users[index], user);
+      else users.push(user);
+      saveUsers(users);
+    }
+    if (!user || !(await verifyPassword(pw, user.pwHash))) {
+      if (!user && navigator.onLine === false) {
+        return setError(form, 'Tidak ada koneksi internet. Login pertama di perangkat ini membutuhkan internet.');
+      }
+      if (!user && cloud.status === 'error') {
+        return setError(form, 'Akun belum ada di perangkat ini dan cloud belum aktif. ' + (cloud.message || 'Periksa pengaturan Firebase.'));
+      }
+      return setError(form, 'Username atau password salah.');
+    }
+    wid = wid || cloudWorkspaceId(user);
+    localStorage.setItem(LS.auth, user.id);
+    state.view = 'home';
+    state.modal = null;
+    state.loginTab = 'login';
+    state.filters = { athleteId: '', from: '', to: '' };
+    toast('Selamat datang, ' + firstName(user.name) + '!');
+    render();
+    startCloud(wid, user);
+  } finally {
+    setBusy(form, false);
+  }
+}
+
+async function handleRegister(form){
+  const fd = new FormData(form);
+  const name = String(fd.get('name') || '').trim();
+  const username = normalizeUsername(fd.get('username'));
+  const pw = String(fd.get('password') || '');
+  const pw2 = String(fd.get('password2') || '');
+  const coachId = String(fd.get('coachId') || '');
+  if (name.length < 2) return setError(form, 'Nama minimal 2 karakter.');
+  if (!isValidUsername(username)) return setError(form, 'Username 3–20 karakter, hanya huruf kecil, angka, titik, atau garis bawah.');
+  if (pw.length < 6) return setError(form, 'Password minimal 6 karakter.');
+  if (pw !== pw2) return setError(form, 'Konfirmasi password tidak sama.');
+  const users = getUsers();
+  if (users.some(u => u.username.toLowerCase() === username)) return setError(form, 'Username sudah dipakai.');
+  if (!users.some(u => u.role === 'coach' && u.id === coachId)) return setError(form, 'Pilih pelatih yang tersedia.');
+  const extra = readProfileExtra(fd);
+  if (extra.error) return setError(form, extra.error);
+  setBusy(form, true, 'Mendaftar…');
+  try {
+    if (await cloudUsernameTaken(username)) return setError(form, 'Username sudah dipakai.');
+    const athlete = {
+      id: uid(), name, username, pwHash: await hashPassword(pw),
+      role: 'athlete', coachId, createdAt: Date.now(),
+      birthDate: extra.birthDate, startDate: extra.startDate, phone: extra.phone, address: extra.address
+    };
+    users.push(athlete);
+    saveUsers(users);
+    localStorage.setItem(LS.auth, athlete.id);
+    state.view = 'home';
+    state.loginTab = 'login';
+    toast('Akun atlet berhasil dibuat. Selamat datang!');
+    render();
+    await startCloud(coachId, athlete);
+    await cloudWriteLookup(athlete, coachId);
+  } finally {
+    setBusy(form, false);
+  }
+}
+
+async function handleAthleteCreate(form){
+  const user = currentUser();
+  if (!user || user.role !== 'coach') return;
+  const fd = new FormData(form);
+  const name = String(fd.get('name') || '').trim();
+  const username = normalizeUsername(fd.get('username'));
+  const pw = String(fd.get('password') || '');
+  const pw2 = String(fd.get('password2') || '');
+  if (name.length < 2) return setError(form, 'Nama minimal 2 karakter.');
+  if (!isValidUsername(username)) return setError(form, 'Username 3–20 karakter, hanya huruf kecil, angka, titik, atau garis bawah.');
+  if (pw.length < 6) return setError(form, 'Password minimal 6 karakter.');
+  if (pw !== pw2) return setError(form, 'Konfirmasi password tidak sama.');
+  const users = getUsers();
+  if (users.some(u => u.username.toLowerCase() === username)) return setError(form, 'Username sudah dipakai.');
+  const extra = readProfileExtra(fd);
+  if (extra.error) return setError(form, extra.error);
+  setBusy(form, true, 'Menyimpan…');
+  try {
+    if (await cloudUsernameTaken(username)) return setError(form, 'Username sudah dipakai.');
+    const athlete = {
+      id: uid(), name, username, pwHash: await hashPassword(pw),
+      role: 'athlete', coachId: user.id, createdAt: Date.now(),
+      birthDate: extra.birthDate, startDate: extra.startDate, phone: extra.phone, address: extra.address
+    };
+    users.push(athlete);
+    saveUsers(users);
+    if (cloud.started) cloudWriteLookup(athlete, cloud.wid || user.id);
+    state.modal = null;
+    render();
+    toast('Akun atlet ' + name + ' berhasil dibuat.');
+  } finally {
+    setBusy(form, false);
+  }
+}
+
+function handleSessionSave(form){
+  const user = currentUser();
+  const draft = state.sessionDraft;
+  if (!user || !draft) return;
+  const athlete = getUserById(draft.athleteId);
+  if (!athlete) return setError(form, 'Atlet tidak ditemukan.');
+  if (user.role === 'athlete' && athlete.id !== user.id) return setError(form, 'Kamu tidak punya akses.');
+  if (user.role === 'coach' && athlete.coachId !== user.id) return setError(form, 'Atlet ini bukan binaanmu.');
+
+  const fd = new FormData(form);
+  const date = String(fd.get('date') || '');
+  if (!date) return setError(form, 'Tanggal latihan wajib diisi.');
+  if (date > todayISO()) return setError(form, 'Tanggal tidak boleh di masa depan.');
+
+  const entries = {};
+  for (const a of ACTIVITIES) {
+    if (!fd.get('act_' + a.key)) continue;
+    const entry = {};
+    let filled = 0;
+    for (const f of a.fields) {
+      const raw = fd.get(`entry_${a.key}_${f.key}`);
+      if (raw === null || raw === '') {
+        if (f.optional) continue;
+        return setError(form, `Isi ${f.label.toLowerCase()} untuk ${a.name.toLowerCase()} dengan benar (lebih dari 0).`);
+      }
+      const num = Number(raw);
+      if (!isFinite(num) || num <= 0) {
+        return setError(form, `Isi ${f.label.toLowerCase()} untuk ${a.name.toLowerCase()} dengan benar (lebih dari 0).`);
+      }
+      entry[f.key] = num;
+      filled++;
+    }
+    if (!filled) {
+      return setError(form, `Isi minimal satu angka untuk ${a.name.toLowerCase()}, atau hapus centangnya.`);
+    }
+    entries[a.key] = entry;
+  }
+  if (!Object.keys(entries).length) return setError(form, 'Centang minimal satu jenis latihan yang dilakukan.');
+  const notes = String(fd.get('notes') || '').trim();
+
+  const sessions = getSessions();
+  if (draft.editingId) {
+    const s = sessions.find(x => x.id === draft.editingId);
+    if (!s) return setError(form, 'Sesi tidak ditemukan.');
+    s.date = date;
+    s.entries = entries;
+    s.notes = notes;
+    s.updatedAt = Date.now();
+  } else {
+    sessions.push({
+      id: uid(), athleteId: draft.athleteId, date, entries, notes,
+      createdBy: user.id, createdAt: Date.now()
+    });
+  }
+  saveSessions(sessions);
+  toast(draft.editingId ? 'Sesi latihan diperbarui.' : 'Sesi latihan tersimpan.');
+
+  const back = draft.returnView;
+  const backAthlete = draft.athleteId;
+  state.sessionDraft = null;
+  if (back === 'athlete' && backAthlete) {
+    state.view = 'athlete';
+    state.athleteId = backAthlete;
+  } else {
+    state.view = back || 'home';
+  }
+  render();
+  scrollTop();
+}
+
+function handleComment(form){
+  const user = currentUser();
+  if (!user || user.role !== 'coach') return;
+  const fd = new FormData(form);
+  const sessionId = String(fd.get('sessionId') || '');
+  const text = String(fd.get('text') || '').trim();
+  const s = getSessions().find(x => x.id === sessionId);
+  const athlete = s ? getUserById(s.athleteId) : null;
+  if (!s || !athlete || athlete.coachId !== user.id) return;
+  if (!text) return setError(form, 'Komentar tidak boleh kosong.');
+  if (text.length > 1000) return setError(form, 'Komentar maksimal 1000 karakter.');
+  const comments = getComments();
+  comments.push({ id: uid(), sessionId, coachId: user.id, text, createdAt: Date.now() });
+  saveComments(comments);
+  toast('Komentar terkirim.');
+  render();
+}
+
+function handleTargetSave(form){
+  const user = currentUser();
+  if (!user || user.role !== 'coach') return;
+  const fd = new FormData(form);
+  const athleteId = String(fd.get('athleteId') || '');
+  const athlete = getUserById(athleteId);
+  if (!athlete || athlete.coachId !== user.id) return setError(form, 'Atlet tidak ditemukan.');
+  const items = {};
+  for (const a of ACTIVITIES) {
+    const entry = {};
+    let has = false;
+    for (const f of a.fields) {
+      const raw = fd.get(`t_${a.key}_${f.key}`);
+      if (raw === null || raw === '') continue;
+      const num = Number(raw);
+      if (!isFinite(num) || num <= 0) {
+        return setError(form, `Isi ${f.label.toLowerCase()} ${a.name.toLowerCase()} dengan angka lebih dari 0.`);
+      }
+      entry[f.key] = num;
+      has = true;
+    }
+    if (has) items[a.key] = entry;
+  }
+  if (!Object.keys(items).length) return setError(form, 'Isi minimal satu target latihan.');
+  const note = String(fd.get('note') || '').trim();
+  const targets = getTargets();
+  targets.push({
+    id: uid(), athleteId, coachId: user.id, items, note, createdAt: Date.now()
+  });
+  saveTargets(targets);
+  state.modal = null;
+  render();
+  toast('Target latihan disimpan.');
+}
+
+function handlePackageSave(form){
+  const user = currentUser();
+  if (!user || user.role !== 'coach') return;
+  const fd = new FormData(form);
+  const athleteId = String(fd.get('athleteId') || '');
+  const athlete = getUserById(athleteId);
+  if (!athlete || athlete.coachId !== user.id) return setError(form, 'Atlet tidak ditemukan.');
+  const meetings = Number(fd.get('meetings'));
+  if (!isFinite(meetings) || !Number.isInteger(meetings) || meetings <= 0) {
+    return setError(form, 'Jumlah pertemuan harus angka bulat lebih dari 0.');
+  }
+  if (meetings > 1000) return setError(form, 'Jumlah pertemuan terlalu banyak (maksimal 1000).');
+  const paidAt = String(fd.get('paidAt') || '') || todayISO();
+  if (paidAt > todayISO()) return setError(form, 'Tanggal pembayaran tidak boleh di masa depan.');
+  const amountRaw = String(fd.get('amount') || '').trim();
+  let amount = null;
+  if (amountRaw !== '') {
+    const n = Number(amountRaw);
+    if (!isFinite(n) || n < 0) return setError(form, 'Nominal pembayaran tidak valid.');
+    amount = n > 0 ? n : null;
+  }
+  const note = String(fd.get('note') || '').trim().slice(0, 120);
+  const packages = getPackages();
+  packages.push({
+    id: uid(), athleteId, coachId: user.id, meetings, amount, paidAt, note, createdAt: Date.now()
+  });
+  savePackages(packages);
+  state.modal = null;
+  render();
+  toast('Paket ' + meetings + ' pertemuan ditambahkan untuk ' + athlete.name + '.');
+}
+
+function handleAttendanceSave(form){
+  const user = currentUser();
+  if (!user || user.role !== 'coach') return;
+  const fd = new FormData(form);
+  const athleteId = String(fd.get('athleteId') || '');
+  const athlete = getUserById(athleteId);
+  if (!athlete || athlete.coachId !== user.id) return setError(form, 'Atlet tidak ditemukan.');
+  const date = String(fd.get('date') || '') || todayISO();
+  if (!date) return setError(form, 'Tanggal latihan wajib diisi.');
+  if (date > todayISO()) return setError(form, 'Tanggal latihan tidak boleh di masa depan.');
+  const sessionsRaw = String(fd.get('sessions') || '').trim();
+  const sessions = Number(sessionsRaw);
+  if (!Number.isInteger(sessions) || sessions < 1 || sessions > 12) {
+    return setError(form, 'Jumlah sesi harus angka bulat 1–12.');
+  }
+  const note = String(fd.get('note') || '').trim().slice(0, 120);
+  const attendance = getAttendance();
+  attendance.push({
+    id: uid(), athleteId, coachId: user.id, date, sessions, note, createdAt: Date.now()
+  });
+  saveAttendance(attendance);
+  const q = quotaSummary(athleteId);
+  state.modal = null;
+  render();
+  toast('Absensi ' + sessions + ' sesi (' + (sessions * 2) + ' jam) untuk ' + athlete.name + ' tersimpan. Sisa kuota: ' + formatNum(q.remaining) + ' pertemuan.');
+}
+
+function handleProfileSave(form){
+  const user = currentUser();
+  if (!user) return;
+  const fd = new FormData(form);
+  const name = String(fd.get('name') || '').trim();
+  if (name.length < 2) return setError(form, 'Nama minimal 2 karakter.');
+  if (name.length > 60) return setError(form, 'Nama maksimal 60 karakter.');
+  let extra = {
+    birthDate: user.birthDate || '',
+    startDate: user.startDate || '',
+    phone: user.phone || '',
+    address: user.address || ''
+  };
+  if (user.role === 'athlete') {
+    const parsed = readProfileExtra(fd);
+    if (parsed.error) return setError(form, parsed.error);
+    extra = parsed;
+  }
+  const users = getUsers();
+  const index = users.findIndex(u => u.id === user.id);
+  if (index < 0) return;
+  users[index] = Object.assign({}, users[index], {
+    name,
+    birthDate: extra.birthDate,
+    startDate: extra.startDate,
+    phone: extra.phone,
+    address: extra.address
+  });
+  saveUsers(users);
+  state.modal = null;
+  render();
+  toast('Profil berhasil diperbarui.');
+}
+
+async function handlePassword(form){
+  const user = currentUser();
+  if (!user) return;
+  const fd = new FormData(form);
+  const oldPw = String(fd.get('oldPassword') || '');
+  const newPw = String(fd.get('newPassword') || '');
+  const newPw2 = String(fd.get('newPassword2') || '');
+  if (!(await verifyPassword(oldPw, user.pwHash))) return setError(form, 'Password lama salah.');
+  if (newPw.length < 6) return setError(form, 'Password baru minimal 6 karakter.');
+  if (newPw !== newPw2) return setError(form, 'Konfirmasi password baru tidak sama.');
+  const users = getUsers();
+  const index = users.findIndex(u => u.id === user.id);
+  if (index < 0) return;
+  users[index] = Object.assign({}, users[index], { pwHash: await hashPassword(newPw) });
+  saveUsers(users);
+  form.reset();
+  toast('Password berhasil diperbarui.');
+}
+
+function handleFilters(form){
+  const fd = new FormData(form);
+  state.filters = {
+    athleteId: String(fd.get('athleteId') || ''),
+    from: String(fd.get('from') || ''),
+    to: String(fd.get('to') || '')
+  };
+  render();
+}
+
+/* ================= backup ================= */
+function exportData(){
+  const data = {
+    app: 'PanahLatih', version: 2, exportedAt: new Date().toISOString(),
+    users: getUsers(), sessions: getSessions(),
+    comments: getComments(), targets: getTargets(),
+    packages: getPackages(), attendance: getAttendance()
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'panahlatih-backup-' + todayISO() + '.json';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1200);
+  toast('File cadangan diunduh.');
+}
+
+async function importFile(file){
+  try {
+    const text = await file.text();
+    const data = JSON.parse(text);
+    if (!data || !Array.isArray(data.users) || !Array.isArray(data.sessions)) {
+      throw new Error('Format tidak valid');
+    }
+    if (!confirm('Impor data ini? Semua data yang ada saat ini akan diganti.')) return;
+    stopCloud();
+    try { localStorage.removeItem(LS.cloudWs); } catch (err) { /* abaikan */ }
+    saveUsers(data.users);
+    saveSessions(data.sessions);
+    saveComments(Array.isArray(data.comments) ? data.comments : []);
+    saveTargets(Array.isArray(data.targets) ? data.targets : []);
+    savePackages(Array.isArray(data.packages) ? data.packages : []);
+    saveAttendance(Array.isArray(data.attendance) ? data.attendance : []);
+    localStorage.removeItem(LS.auth);
+    state.view = 'home';
+    state.modal = null;
+    state.sessionDraft = null;
+    state.athleteId = null;
+    state.filters = { athleteId: '', from: '', to: '' };
+    renderAuth();
+    toast('Data berhasil diimpor. Silakan masuk kembali.');
+  } catch (err) {
+    alert('File tidak valid. Pastikan file cadangan PanahLatih (.json).');
+  }
+}
+
+/* ================= boot ================= */
+window.addEventListener('storage', (e) => {
+  if (e.key && e.key.indexOf('panahlatih_') === 0) boot();
+});
+window.addEventListener('online', () => {
+  const user = currentUser();
+  if (user) startCloud(cloudWorkspaceId(user), user);
+});
+window.addEventListener('offline', () => {
+  if (cloud.started) setCloudStatus('offline');
+});
+
+function boot(){
+  initCloud();
+  const users = getUsers();
+  if (!users.length) { renderSetup(); return; }
+  const user = currentUser();
+  if (user) {
+    render();
+    startCloud(cloudWorkspaceId(user), user);
+  } else {
+    renderAuth();
+  }
+}
+
+boot();
+
+</script>
+</body>
+</html>
