@@ -202,6 +202,24 @@ textarea{resize:vertical;min-height:44px}
 }
 .avatar.lg{width:48px;height:48px;font-size:16px}
 .avatar.xl{width:64px;height:64px;font-size:22px}
+.avatar.has-photo{background:none;overflow:hidden;padding:0}
+.avatar img{width:100%;height:100%;object-fit:cover;display:block;border-radius:50%}
+.photo-editor{
+  display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;
+  padding:14px;margin-bottom:16px;border-radius:14px;
+  background:rgba(148,163,184,.04);border:1px solid var(--line);
+}
+.photo-editor-side{flex:1;min-width:180px}
+.photo-editor-actions{display:flex;gap:8px;flex-wrap:wrap}
+.photo-editor .form-hint{margin-top:8px}
+.photo-pick{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.att-photo-preview{
+  width:96px;height:96px;border-radius:12px;flex-shrink:0;overflow:hidden;
+  border:1px dashed var(--line-strong);background:rgba(148,163,184,.05);
+  display:grid;place-items:center;color:var(--muted);
+}
+.att-photo-preview.has-photo{border-style:solid;border-color:var(--line)}
+.att-photo-preview img{width:100%;height:100%;object-fit:cover;display:block}
 .userchip-text{display:flex;flex-direction:column;line-height:1.15;min-width:0}
 .userchip-name{font-size:13px;font-weight:700;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .role-badge{font-size:9.5px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--amber)}
@@ -351,6 +369,20 @@ textarea{resize:vertical;min-height:44px}
 .att-title{font-weight:700;color:var(--text);font-size:13px}
 .att-sub{color:var(--muted);font-size:11.5px;margin-top:2px;overflow-wrap:anywhere}
 .att-row .btn{padding:5px 9px;font-size:11.5px;border-radius:7px;flex-shrink:0}
+.att-thumb{
+  width:46px;height:46px;border-radius:10px;flex-shrink:0;padding:0;overflow:hidden;
+  border:1px solid var(--line);background:rgba(148,163,184,.08);color:var(--muted);
+  display:grid;place-items:center;cursor:pointer;font-size:16px;transition:.15s;
+}
+.att-thumb:hover{border-color:var(--line-strong);background:rgba(148,163,184,.14)}
+.att-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.att-thumb-icon{font-size:17px;line-height:1}
+.photo-full{
+  display:grid;place-items:center;min-height:120px;padding:10px;border-radius:14px;
+  background:rgba(3,7,14,.5);border:1px solid var(--line);
+}
+.photo-full img{max-width:100%;max-height:68vh;border-radius:10px;display:block}
+.photo-view{width:min(820px,100%)}
 .package-presets{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
 .package-presets .btn{padding:6px 11px;font-size:12px;border-radius:8px}
 .profile-rows{margin-top:6px}
@@ -1050,6 +1082,275 @@ function showCloudInfo(){
   toast('Status: ' + label + ' · Sinkron terakhir: ' + when);
 }
 
+/* ================= foto (avatar & absensi) ================= */
+const photoCache = new Map();
+const photoLoading = new Set();
+const photoRetry = new Set();
+let attendancePhoto = null;
+
+function photoDocRef(photoId){
+  if (!cloud.db || !cloud.wid) return null;
+  return cloud.db.collection('workspaces').doc(cloud.wid).collection('photos').doc(photoId);
+}
+
+function avatarMarkup(photoId, name, cls){
+  const base = 'avatar' + (cls ? ' ' + cls : '');
+  const url = photoId ? photoCache.get(photoId) : null;
+  if (url) return `<div class="${base} has-photo"><img src="${url}" alt="${esc(name)}"></div>`;
+  if (photoId) {
+    loadPhoto(photoId);
+    return `<div class="${base}" data-photo-id="${esc(photoId)}" data-photo-name="${esc(name)}">${esc(initials(name))}</div>`;
+  }
+  return `<div class="${base}">${esc(initials(name))}</div>`;
+}
+
+function paintAvatar(el, dataUrl, name){
+  if (!el) return;
+  el.classList.toggle('has-photo', !!dataUrl);
+  delete el.dataset.photoId;
+  delete el.dataset.photoName;
+  el.innerHTML = dataUrl
+    ? '<img src="' + dataUrl + '" alt="' + esc(name) + '">'
+    : esc(initials(name));
+}
+
+function refreshPhotoEls(photoId){
+  const url = photoCache.get(photoId);
+  if (!url) return;
+  document.querySelectorAll('[data-photo-id]').forEach(el => {
+    if (el.getAttribute('data-photo-id') !== photoId) return;
+    el.classList.add('has-photo');
+    el.removeAttribute('data-photo-id');
+    el.innerHTML = '<img src="' + url + '" alt="' + esc(el.getAttribute('data-photo-name') || 'Foto') + '">';
+  });
+}
+
+async function loadPhoto(photoId, attempt){
+  if (!photoId || photoCache.has(photoId) || photoLoading.has(photoId)) return;
+  attempt = attempt || 0;
+  if (!cloud.started || !cloud.wid) {
+    if (attempt >= 40 || photoRetry.has(photoId)) return;
+    photoRetry.add(photoId);
+    setTimeout(() => {
+      photoRetry.delete(photoId);
+      loadPhoto(photoId, attempt + 1);
+    }, 500);
+    return;
+  }
+  photoLoading.add(photoId);
+  try {
+    await ensureCloudAuth();
+    const ref = photoDocRef(photoId);
+    if (!ref) return;
+    const snap = await ref.get();
+    if (!snap.exists) return;
+    const data = snap.data() || {};
+    if (!data.dataUrl) return;
+    photoCache.set(photoId, data.dataUrl);
+    refreshPhotoEls(photoId);
+  } catch (err) {
+    console.warn('Gagal memuat foto', err);
+  } finally {
+    photoLoading.delete(photoId);
+  }
+}
+
+function compressImage(file, opts){
+  opts = opts || {};
+  const maxSize = opts.maxSize || 1200;
+  const maxChars = opts.maxChars || 800000;
+  const square = !!opts.square;
+  let quality = opts.quality || 0.72;
+  return new Promise((resolve, reject) => {
+    if (!file || !file.type || file.type.indexOf('image/') !== 0) {
+      reject(new Error('File yang dipilih bukan gambar.'));
+      return;
+    }
+    if (file.size > 15 * 1024 * 1024) {
+      reject(new Error('Ukuran file terlalu besar (maksimal 15 MB).'));
+      return;
+    }
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('Gagal membaca file gambar.'));
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error('Gambar tidak bisa dibuka.'));
+      img.onload = () => {
+        const w = img.naturalWidth || img.width;
+        const h = img.naturalHeight || img.height;
+        if (!w || !h) { reject(new Error('Ukuran gambar tidak valid.')); return; }
+        let sx = 0, sy = 0, sw = w, sh = h;
+        if (square) {
+          const side = Math.min(w, h);
+          sx = (w - side) / 2;
+          sy = (h - side) / 2;
+          sw = side;
+          sh = side;
+        }
+        const scale = Math.min(1, maxSize / Math.max(sw, sh));
+        const outW = Math.max(1, Math.round(sw * scale));
+        const outH = Math.max(1, Math.round(sh * scale));
+        const canvas = document.createElement('canvas');
+        canvas.width = outW;
+        canvas.height = outH;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, outW, outH);
+        ctx.drawImage(img, sx, sy, sw, sh, 0, 0, outW, outH);
+        let dataUrl = canvas.toDataURL('image/jpeg', quality);
+        while (dataUrl.length > maxChars && quality > 0.35) {
+          quality = Math.round((quality - 0.12) * 100) / 100;
+          dataUrl = canvas.toDataURL('image/jpeg', quality);
+        }
+        if (dataUrl.length > maxChars) {
+          reject(new Error('Foto masih terlalu besar setelah dikompres. Coba gambar lain.'));
+          return;
+        }
+        resolve(dataUrl);
+      };
+      img.src = String(reader.result);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+async function cloudSavePhoto(dataUrl, meta){
+  if (!cloud.ready) {
+    const ok = await initCloud();
+    if (!ok) throw new Error('Cloud belum siap. Periksa koneksi internet.');
+  }
+  if (!cloud.started || !cloud.wid) throw new Error('Sinkronisasi cloud belum berjalan.');
+  await ensureCloudAuth();
+  const photoId = uid();
+  const ref = photoDocRef(photoId);
+  if (!ref) throw new Error('Workspace cloud tidak ditemukan.');
+  await ref.set(Object.assign({ id: photoId, dataUrl, createdAt: Date.now() }, meta || {}));
+  photoCache.set(photoId, dataUrl);
+  return photoId;
+}
+
+function cloudDeletePhoto(photoId){
+  if (!photoId) return;
+  photoCache.delete(photoId);
+  const ref = photoDocRef(photoId);
+  if (!ref) return;
+  ref.delete().catch(err => console.warn('Gagal menghapus foto', err));
+}
+
+function attendancePhotoThumb(a, caption){
+  if (!a || !a.photoId) return '';
+  const url = photoCache.get(a.photoId);
+  if (!url) loadPhoto(a.photoId);
+  return `<button type="button" class="att-thumb${url ? ' has-photo' : ''}" data-action="view-photo" data-id="${esc(a.photoId)}" data-caption="${esc(caption || 'Foto absensi')}"${url ? '' : ` data-photo-id="${esc(a.photoId)}" data-photo-name="Foto absensi"`} title="Lihat foto">${url ? '<img src="' + url + '" alt="Foto absensi">' : '<span class="att-thumb-icon">📷</span>'}</button>`;
+}
+
+function setPhotoBusy(inputId, busy, label){
+  const btn = document.querySelector('[data-action="pick-photo"][data-input="' + inputId + '"]');
+  if (!btn) return;
+  if (busy) {
+    if (!btn.dataset.idleLabel) btn.dataset.idleLabel = btn.textContent;
+    btn.textContent = label || 'Memproses…';
+    btn.disabled = true;
+  } else {
+    if (btn.dataset.idleLabel) btn.textContent = btn.dataset.idleLabel;
+    btn.disabled = false;
+  }
+}
+
+function setAttendancePhotoPreview(dataUrl){
+  const box = document.getElementById('att-photo-preview');
+  if (box) {
+    box.classList.toggle('has-photo', !!dataUrl);
+    box.innerHTML = dataUrl
+      ? '<img src="' + dataUrl + '" alt="Pratinjau foto absensi">'
+      : '<span class="att-thumb-icon">📷</span>';
+  }
+  const rm = document.querySelector('[data-action="clear-attendance-photo"]');
+  if (rm) rm.hidden = !dataUrl;
+}
+
+function updateProfilePhotoUi(kind, dataUrl, target){
+  const inputId = kind === 'athlete' ? 'photo-modal-input' : 'prof-photo-input';
+  const box = document.getElementById(kind === 'athlete' ? 'photo-modal-preview' : 'prof-photo-preview');
+  paintAvatar(box && box.querySelector('.avatar'), dataUrl, target.name);
+  const rm = document.querySelector('[data-action="remove-photo"][data-owner="' + target.id + '"]');
+  if (rm) rm.hidden = false;
+  const pick = document.querySelector('[data-action="pick-photo"][data-input="' + inputId + '"]');
+  if (pick) pick.textContent = '📷 Ganti Foto';
+  if (target.id === (currentUser() || {}).id) {
+    const chip = document.querySelector('.topbar .userchip .avatar');
+    if (chip) paintAvatar(chip, dataUrl, target.name);
+  }
+  if (kind === 'athlete') render();
+}
+
+async function handlePhotoPick(kind, file, ownerId){
+  if (kind === 'attendance') {
+    setPhotoBusy('att-photo-input', true, 'Memproses…');
+    try {
+      const dataUrl = await compressImage(file, { maxSize: 1280, quality: 0.7, maxChars: 800000 });
+      attendancePhoto = dataUrl;
+      setAttendancePhotoPreview(dataUrl);
+      toast('Foto siap disimpan bersama absensi.');
+    } catch (err) {
+      alert((err && err.message) || 'Foto gagal diproses.');
+    } finally {
+      setPhotoBusy('att-photo-input', false);
+    }
+    return;
+  }
+  const target = kind === 'athlete' ? getUserById(ownerId) : currentUser();
+  if (!target) return;
+  const inputId = kind === 'athlete' ? 'photo-modal-input' : 'prof-photo-input';
+  setPhotoBusy(inputId, true, 'Mengunggah…');
+  let result = null;
+  try {
+    const dataUrl = await compressImage(file, { maxSize: 480, quality: 0.8, square: true, maxChars: 300000 });
+    const photoId = await cloudSavePhoto(dataUrl, { ownerId: target.id, kind: 'avatar' });
+    const oldId = target.photoId;
+    const users = getUsers();
+    const index = users.findIndex(u => u.id === target.id);
+    if (index < 0) throw new Error('Akun tidak ditemukan.');
+    users[index] = Object.assign({}, users[index], { photoId });
+    saveUsers(users);
+    if (oldId && oldId !== photoId) cloudDeletePhoto(oldId);
+    result = { dataUrl, target: users[index] };
+  } catch (err) {
+    alert((err && err.message) || 'Foto gagal diunggah.');
+  } finally {
+    setPhotoBusy(inputId, false);
+  }
+  if (result) {
+    updateProfilePhotoUi(kind, result.dataUrl, result.target);
+    toast('Foto profil diperbarui.');
+  }
+}
+
+function removeUserPhoto(target){
+  if (!target || !target.photoId) return;
+  const oldId = target.photoId;
+  const users = getUsers();
+  const index = users.findIndex(u => u.id === target.id);
+  if (index < 0) return;
+  users[index] = Object.assign({}, users[index], { photoId: null });
+  saveUsers(users);
+  cloudDeletePhoto(oldId);
+  const type = state.modal && state.modal.type;
+  if (type === 'photo') {
+    render();
+  } else {
+    const box = document.getElementById('prof-photo-preview');
+    paintAvatar(box && box.querySelector('.avatar'), null, target.name);
+    const rm = document.querySelector('[data-action="remove-photo"][data-owner="' + target.id + '"]');
+    if (rm) rm.hidden = true;
+    if (target.id === (currentUser() || {}).id) {
+      const chip = document.querySelector('.topbar .userchip .avatar');
+      if (chip) paintAvatar(chip, null, target.name);
+    }
+  }
+  toast('Foto profil dihapus.');
+}
+
 
 /* ================= password ================= */
 const PW_SALT = 'panahlatih::v1::';
@@ -1308,6 +1609,7 @@ function attendanceList(athleteId, opts){
         <div class="att-title">${esc(fmtDate(a.date))}${athlete ? ' · ' + esc(athlete.name) : ''}</div>
         <div class="att-sub">${sesi} sesi · ${attendanceHours(a)} jam${a.note ? ' · ' + esc(a.note) : ''}</div>
       </div>
+      ${attendancePhotoThumb(a, 'Absensi ' + fmtDate(a.date))}
       ${opts.manage ? `<button type="button" class="btn btn-danger btn-xs" data-action="delete-attendance" data-id="${a.id}">Hapus</button>` : ''}
     </div>`;
   }).join('')}</div>`;
@@ -1570,7 +1872,7 @@ function shell(user){
             <span class="sync-dot"></span><span class="sync-label">Lokal</span>
           </button>
           <div class="userchip" title="${esc(user.name)}">
-            <div class="avatar">${esc(initials(user.name))}</div>
+            ${avatarMarkup(user.photoId, user.name)}
             <div class="userchip-text">
               <span class="userchip-name">${esc(user.name)}</span>
               <span class="role-badge ${user.role}">${user.role === 'coach' ? 'Pelatih' : 'Atlet'}</span>
@@ -1766,7 +2068,7 @@ function athleteCard(a){
   const q = quotaSummary(a.id);
   return `<article class="athlete-card card" data-action="select-athlete" data-id="${a.id}" role="button" tabindex="0">
     <div class="athlete-top">
-      <div class="avatar lg">${esc(initials(a.name))}</div>
+      ${avatarMarkup(a.photoId, a.name, 'lg')}
       <div><div class="athlete-name">${esc(a.name)}</div><div class="athlete-user">@${esc(a.username)}</div></div>
     </div>
     <div class="athlete-stats">
@@ -1895,7 +2197,7 @@ function coachAthleteView(user){
   ${back}
   <div class="page-head">
     <div class="profile-card" style="margin-bottom:0">
-      <div class="avatar xl">${esc(initials(athlete.name))}</div>
+      ${avatarMarkup(athlete.photoId, athlete.name, 'xl')}
       <div>
         <h1 style="margin:0 0 2px;font-size:26px">${esc(athlete.name)}</h1>
         <div class="muted" style="font-size:13px">@${esc(athlete.username)} · Bergabung ${esc(fmtDateShort(isoFromTs(athlete.createdAt)))}</div>
@@ -1918,6 +2220,7 @@ function coachAthleteView(user){
     <div style="display:flex;gap:8px;flex-wrap:wrap">
       <button type="button" class="btn btn-primary" data-action="new-session" data-athlete="${athlete.id}">＋ Catat Sesi</button>
       <button type="button" class="btn btn-soft" data-action="open-target" data-athlete="${athlete.id}">🎯 ${target ? 'Perbarui Target' : 'Atur Target'}</button>
+      <button type="button" class="btn btn-soft" data-action="open-photo" data-athlete="${athlete.id}">📷 ${athlete.photoId ? 'Ganti Foto' : 'Foto Profil'}</button>
     </div>
   </div>
 
@@ -1993,6 +2296,7 @@ function coachAttendanceView(user){
           <div class="att-title">${esc(athlete ? athlete.name : 'Atlet')} · ${esc(fmtDate(a.date))}</div>
           <div class="att-sub">${attendanceSessions(a)} sesi · ${attendanceHours(a)} jam${a.note ? ' · ' + esc(a.note) : ''}</div>
         </div>
+        ${attendancePhotoThumb(a, (athlete ? athlete.name + ' · ' : '') + fmtDate(a.date))}
         <button type="button" class="btn btn-danger btn-xs" data-action="delete-attendance" data-id="${a.id}">Hapus</button>
       </div>`;
     }).join('')}</div>` : '<p class="muted" style="font-size:12.5px">Belum ada absensi. Gunakan tombol “Tandai Hadir” pada kartu kuota atlet.</p>'}
@@ -2208,11 +2512,12 @@ function profileView(user){
   <div class="grid-2">
     <div class="card card-pad">
       <div class="profile-card">
-        <div class="avatar xl">${esc(initials(user.name))}</div>
+        ${avatarMarkup(user.photoId, user.name, 'xl')}
         <div>
           <h2>${esc(user.name)}</h2>
           <div class="muted" style="font-size:13px">@${esc(user.username)}</div>
           <span class="role-badge ${user.role}">${user.role === 'coach' ? 'Pelatih' : 'Atlet'}</span>
+          <button type="button" class="link-btn" style="display:block;margin-top:6px" data-action="edit-profile">📷 ${user.photoId ? 'Ganti foto profil' : 'Tambah foto profil'}</button>
         </div>
       </div>
       <div class="kv"><span>Bergabung</span><strong>${esc(joined)}</strong></div>
@@ -2290,8 +2595,18 @@ function renderModal(){
   else if (state.modal.type === 'package') html = packageModal(user);
   else if (state.modal.type === 'attendance') html = attendanceModal(user);
   else if (state.modal.type === 'profile') html = profileModal(user);
+  else if (state.modal.type === 'photo') html = photoModal(user);
+  else if (state.modal.type === 'photo-view') html = photoViewModal();
   modalRoot.innerHTML = html;
   document.body.classList.toggle('modal-open', !!html);
+}
+
+function closeModal(){
+  const type = state.modal && state.modal.type;
+  if (type === 'attendance') attendancePhoto = null;
+  state.modal = null;
+  renderModal();
+  if (type === 'profile' || type === 'photo') render();
 }
 
 function detailRows(entries, target){
@@ -2348,7 +2663,7 @@ function sessionModal(user){
         ${comments.length ? comments.map(c => {
           const coach = getUserById(c.coachId);
           return `<div class="comment">
-            <div class="avatar">${esc(initials(coach ? coach.name : '?'))}</div>
+            ${avatarMarkup(coach ? coach.photoId : null, coach ? coach.name : '?')}
             <div class="comment-body">
               <div class="comment-top">
                 <span class="comment-name">${esc(coach ? coach.name : 'Pelatih')}</span>
@@ -2580,6 +2895,20 @@ function attendanceModal(user){
           <label for="att-note">Catatan <span class="unit">(opsional)</span></label>
           <input id="att-note" name="note" maxlength="120" placeholder="Contoh: latihan teknik grip">
         </div>
+        <div class="field">
+          <label>Foto latihan <span class="unit">(opsional)</span></label>
+          <div class="photo-pick">
+            <div class="att-photo-preview" id="att-photo-preview"><span class="att-thumb-icon">📷</span></div>
+            <div class="photo-editor-side">
+              <input type="file" id="att-photo-input" data-photo-input="attendance" accept="image/*" hidden>
+              <div class="photo-editor-actions">
+                <button type="button" class="btn btn-soft btn-sm" data-action="pick-photo" data-input="att-photo-input">📷 Pilih Foto</button>
+                <button type="button" class="btn btn-ghost btn-sm" data-action="clear-attendance-photo" hidden>Hapus Foto</button>
+              </div>
+              <p class="form-hint">Dokumentasi pertemuan. Foto otomatis dikompres sebelum disimpan.</p>
+            </div>
+          </div>
+        </div>
         <div class="form-error" hidden></div>
         <div class="form-actions">
           <button type="button" class="btn btn-ghost" data-action="close-modal">Batal</button>
@@ -2601,6 +2930,17 @@ function profileModal(user){
         <button type="button" class="icon-btn" data-action="close-modal" aria-label="Tutup">✕</button>
       </div>
       <form data-form="profile" class="stack" novalidate>
+        <div class="photo-editor">
+          <div id="prof-photo-preview">${avatarMarkup(user.photoId, user.name, 'xl')}</div>
+          <div class="photo-editor-side">
+            <input type="file" id="prof-photo-input" data-photo-input="profile" accept="image/*" hidden>
+            <div class="photo-editor-actions">
+              <button type="button" class="btn btn-soft btn-sm" data-action="pick-photo" data-input="prof-photo-input">📷 ${user.photoId ? 'Ganti Foto' : 'Pilih Foto'}</button>
+              <button type="button" class="btn btn-ghost btn-sm" data-action="remove-photo" data-owner="${user.id}" ${user.photoId ? '' : 'hidden'}>Hapus Foto</button>
+            </div>
+            <p class="form-hint">Foto profil tampil di daftar atlet, komentar, dan halaman profil. Otomatis dikompres.</p>
+          </div>
+        </div>
         <div class="field">
           <label for="prof-name">Nama lengkap</label>
           <input id="prof-name" name="name" value="${esc(user.name)}" autocomplete="name" required>
@@ -2631,6 +2971,64 @@ function profileModal(user){
           <button type="submit" class="btn btn-primary">Simpan Profil</button>
         </div>
       </form>
+    </div>
+  </div>`;
+}
+
+function photoModal(user){
+  const athleteId = state.modal.athleteId;
+  const target = athleteId ? getUserById(athleteId) : user;
+  if (!target) { state.modal = null; return ''; }
+  const allowed = target.id === user.id
+    || (user.role === 'coach' && target.role === 'athlete' && target.coachId === user.id);
+  if (!allowed) { state.modal = null; return ''; }
+  return `<div class="overlay" data-action="close-modal-bg">
+    <div class="modal card" role="dialog" aria-modal="true" aria-label="Foto profil">
+      <div class="modal-head">
+        <div>
+          <div class="eyebrow">Foto profil</div>
+          <h2>${esc(target.name)}</h2>
+        </div>
+        <button type="button" class="icon-btn" data-action="close-modal" aria-label="Tutup">✕</button>
+      </div>
+      <div class="photo-editor">
+        <div id="photo-modal-preview">${avatarMarkup(target.photoId, target.name, 'xl')}</div>
+        <div class="photo-editor-side">
+          <input type="file" id="photo-modal-input" data-photo-input="athlete" data-owner="${target.id}" accept="image/*" hidden>
+          <div class="photo-editor-actions">
+            <button type="button" class="btn btn-soft btn-sm" data-action="pick-photo" data-input="photo-modal-input">📷 ${target.photoId ? 'Ganti Foto' : 'Pilih Foto'}</button>
+            <button type="button" class="btn btn-ghost btn-sm" data-action="remove-photo" data-owner="${target.id}" ${target.photoId ? '' : 'hidden'}>Hapus Foto</button>
+          </div>
+          <p class="form-hint">Foto disimpan di cloud dan tampil di daftar atlet, profil, serta komentar.</p>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-soft" data-action="close-modal">Tutup</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function photoViewModal(){
+  const photoId = state.modal.photoId;
+  const url = photoId ? photoCache.get(photoId) : null;
+  if (photoId && !url) loadPhoto(photoId);
+  const caption = state.modal.caption || 'Foto';
+  return `<div class="overlay" data-action="close-modal-bg">
+    <div class="modal card photo-view" role="dialog" aria-modal="true" aria-label="Lihat foto">
+      <div class="modal-head">
+        <div>
+          <div class="eyebrow">Foto absensi</div>
+          <h2>${esc(caption)}</h2>
+        </div>
+        <button type="button" class="icon-btn" data-action="close-modal" aria-label="Tutup">✕</button>
+      </div>
+      <div class="photo-full"${url ? '' : ` data-photo-id="${esc(photoId)}" data-photo-name="${esc(caption)}"`}>
+        ${url ? '<img src="' + url + '" alt="' + esc(caption) + '">' : '<span class="muted">Memuat foto…</span>'}
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn btn-soft" data-action="close-modal">Tutup</button>
+      </div>
     </div>
   </div>`;
 }
@@ -2715,11 +3113,10 @@ document.addEventListener('click', (e) => {
       return;
     }
     case 'close-modal':
-      state.modal = null;
-      renderModal();
+      closeModal();
       return;
     case 'close-modal-bg':
-      if (e.target === el) { state.modal = null; renderModal(); }
+      if (e.target === el) closeModal();
       return;
     case 'new-session':
       startNewSession(user, el.dataset.athlete);
@@ -2798,10 +3195,45 @@ document.addEventListener('click', (e) => {
       if (user.role !== 'coach') return;
       const athlete = getUserById(el.dataset.athlete);
       if (!athlete || athlete.coachId !== user.id) return;
+      attendancePhoto = null;
       state.modal = { type: 'attendance', athleteId: athlete.id };
       renderModal();
       return;
     }
+    case 'open-photo': {
+      if (user.role !== 'coach') return;
+      const athlete = getUserById(el.dataset.athlete);
+      if (!athlete || athlete.role !== 'athlete' || athlete.coachId !== user.id) return;
+      state.modal = { type: 'photo', athleteId: athlete.id };
+      renderModal();
+      return;
+    }
+    case 'view-photo': {
+      const id = el.dataset.id;
+      if (!id) return;
+      state.modal = { type: 'photo-view', photoId: id, caption: el.dataset.caption || 'Foto' };
+      renderModal();
+      return;
+    }
+    case 'pick-photo': {
+      const input = document.getElementById(el.dataset.input || 'prof-photo-input');
+      if (input) input.click();
+      return;
+    }
+    case 'remove-photo': {
+      const target = getUserById(el.dataset.owner || '');
+      if (!target) return;
+      const allowed = (user && user.id === target.id)
+        || (user && user.role === 'coach' && target.role === 'athlete' && target.coachId === user.id);
+      if (!allowed) return;
+      if (!confirm('Hapus foto profil ' + target.name + '?')) return;
+      removeUserPhoto(target);
+      return;
+    }
+    case 'clear-attendance-photo':
+      attendancePhoto = null;
+      setAttendancePhotoPreview(null);
+      return;
     case 'preset-meetings': {
       const input = document.getElementById('pkg-meetings');
       if (input) { input.value = el.dataset.value || ''; input.focus(); }
@@ -2833,6 +3265,7 @@ document.addEventListener('click', (e) => {
       const sesi = attendanceSessions(att);
       if (!confirm('Hapus absensi tanggal ' + fmtDateShort(att.date) + ' (' + sesi + ' sesi)? Kuota akan bertambah ' + sesi + ' pertemuan.')) return;
       saveAttendance(getAttendance().filter(a => a.id !== att.id));
+      if (att.photoId) cloudDeletePhoto(att.photoId);
       toast('Absensi dihapus.');
       render();
       return;
@@ -2859,8 +3292,7 @@ document.addEventListener('click', (e) => {
 
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && state.modal) {
-    state.modal = null;
-    renderModal();
+    closeModal();
   }
   if (e.key === 'Enter') {
     const t = e.target;
@@ -2883,6 +3315,14 @@ document.addEventListener('change', (e) => {
         if (first) first.focus();
       }
     }
+  }
+  if (e.target && e.target.matches && e.target.matches('input[data-photo-input]')) {
+    const input = e.target;
+    const file = input.files && input.files[0];
+    const kind = input.dataset.photoInput;
+    const owner = input.dataset.owner || '';
+    input.value = '';
+    if (file) handlePhotoPick(kind, file, owner);
   }
   if (e.target && e.target.id === 'import-file') {
     const file = e.target.files && e.target.files[0];
@@ -2907,7 +3347,7 @@ document.addEventListener('submit', async (e) => {
     else if (type === 'comment') handleComment(form);
     else if (type === 'target') handleTargetSave(form);
     else if (type === 'package') handlePackageSave(form);
-    else if (type === 'attendance') handleAttendanceSave(form);
+    else if (type === 'attendance') await handleAttendanceSave(form);
     else if (type === 'profile') handleProfileSave(form);
     else if (type === 'password') await handlePassword(form);
     else if (type === 'filters') handleFilters(form);
@@ -3223,7 +3663,7 @@ function handlePackageSave(form){
   toast('Paket ' + meetings + ' pertemuan ditambahkan untuk ' + athlete.name + '.');
 }
 
-function handleAttendanceSave(form){
+async function handleAttendanceSave(form){
   const user = currentUser();
   if (!user || user.role !== 'coach') return;
   const fd = new FormData(form);
@@ -3239,11 +3679,23 @@ function handleAttendanceSave(form){
     return setError(form, 'Jumlah sesi harus angka bulat 1–12.');
   }
   const note = String(fd.get('note') || '').trim().slice(0, 120);
+  let photoId = null;
+  if (attendancePhoto) {
+    setBusy(form, true, 'Menyimpan foto…');
+    try {
+      photoId = await cloudSavePhoto(attendancePhoto, { ownerId: athleteId, kind: 'attendance', date });
+    } catch (err) {
+      setBusy(form, false);
+      return setError(form, 'Foto gagal disimpan. ' + ((err && err.message) || '') + ' Hapus foto atau coba lagi.');
+    }
+  }
   const attendance = getAttendance();
   attendance.push({
-    id: uid(), athleteId, coachId: user.id, date, sessions, note, createdAt: Date.now()
+    id: uid(), athleteId, coachId: user.id, date, sessions, note, photoId, createdAt: Date.now()
   });
   saveAttendance(attendance);
+  attendancePhoto = null;
+  setBusy(form, false);
   const q = quotaSummary(athleteId);
   state.modal = null;
   render();
