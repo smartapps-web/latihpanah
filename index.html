@@ -142,7 +142,19 @@ textarea{resize:vertical;min-height:44px}
   content:"🏹";position:absolute;font-size:300px;opacity:.045;
   right:-60px;bottom:-60px;transform:rotate(-15deg);pointer-events:none;
 }
-.auth-hero .brand{margin-bottom:6px}
+.auth-hero .brand{margin-bottom:8px;gap:14px}
+.auth-hero .brand-badge{
+  width:64px;height:64px;border-radius:20px;font-size:32px;
+  box-shadow:0 16px 36px -12px rgba(245,165,36,.85);
+}
+html.has-logo .auth-hero .brand-badge{width:72px;height:72px;border-radius:22px}
+.auth-hero .brand-name{font-size:27px;letter-spacing:-.5px;line-height:1.1}
+.auth-hero .brand-sub{font-size:12.5px;margin-top:4px}
+html.has-logo .auth-hero::after{
+  content:"";width:340px;height:340px;font-size:0;opacity:.07;
+  background-image:var(--app-logo);background-size:contain;
+  background-position:center;background-repeat:no-repeat;
+}
 .hero-title{font-size:clamp(30px,4vw,46px);line-height:1.08;letter-spacing:-1px;margin:0 0 16px}
 .hero-title span{color:var(--amber-2)}
 .hero-sub{color:var(--muted);font-size:15px;max-width:430px;line-height:1.65;margin:0}
@@ -155,10 +167,23 @@ textarea{resize:vertical;min-height:44px}
 }
 .auth-panel{
   display:flex;flex-direction:column;justify-content:center;align-items:center;
-  padding:40px 24px;gap:16px;
+  padding:40px 24px;gap:16px;position:relative;overflow:hidden;
+}
+.auth-panel::before{
+  content:"";position:absolute;width:520px;height:520px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(245,165,36,.13),transparent 68%);
+  top:-170px;right:-150px;
 }
 .auth-card{width:min(440px,100%);padding:28px;position:relative;z-index:1}
-.auth-mobile-brand{display:none;margin-bottom:20px}
+.auth-card::before{
+  content:"";position:absolute;inset:0 0 auto;height:2px;border-radius:18px 18px 0 0;
+  background:linear-gradient(90deg,transparent,rgba(251,191,36,.7),transparent);
+}
+.auth-mobile-brand{display:none;margin-bottom:22px;gap:12px}
+.auth-mobile-brand .brand-badge{width:52px;height:52px;border-radius:16px;font-size:26px}
+html.has-logo .auth-mobile-brand .brand-badge{width:56px;height:56px;border-radius:18px}
+.auth-mobile-brand .brand-name{font-size:22px;letter-spacing:-.3px}
+.auth-mobile-brand .brand-sub{font-size:11.5px}
 .auth-title{margin:0 0 6px;font-size:23px;letter-spacing:-.3px}
 .auth-sub{margin:0 0 20px;color:var(--muted);font-size:13.5px;line-height:1.55}
 .auth-foot{max-width:440px;text-align:center;color:var(--muted);font-size:11.5px;line-height:1.6;margin:0}
@@ -374,6 +399,7 @@ textarea{resize:vertical;min-height:44px}
 .att-title{font-weight:700;color:var(--text);font-size:13px}
 .att-sub{color:var(--muted);font-size:11.5px;margin-top:2px;overflow-wrap:anywhere}
 .att-row .btn{padding:5px 9px;font-size:11.5px;border-radius:7px;flex-shrink:0}
+.att-more{display:block;margin:12px auto 0}
 .att-thumb{
   width:46px;height:46px;border-radius:10px;flex-shrink:0;padding:0;overflow:hidden;
   border:1px solid var(--line);background:rgba(148,163,184,.08);color:var(--muted);
@@ -492,6 +518,37 @@ body.modal-open{overflow:hidden}
 }
 @keyframes toastIn{from{opacity:0;transform:translateY(10px)}}
 
+/* ---------- grafik ---------- */
+.chart-card{padding:16px}
+.chart-controls{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+.chart-controls .field{min-width:200px;flex:1;max-width:340px;margin:0}
+.chart-toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.chart-type{display:flex;gap:6px;flex-wrap:wrap}
+.chart-range{display:flex;gap:6px;flex-wrap:wrap}
+.chart-range-btn{
+  font:inherit;font-size:12px;font-weight:600;padding:6px 11px;border-radius:999px;cursor:pointer;
+  background:rgba(148,163,184,.08);border:1px solid var(--line);color:var(--muted);
+}
+.chart-range-btn:hover{border-color:var(--line-strong);color:var(--text)}
+.chart-range-btn.active{background:var(--amber-soft);border-color:rgba(245,165,36,.45);color:var(--amber-2)}
+.chart-svg{width:100%;max-width:560px;height:auto;display:block;margin:6px auto 0}
+.chart-svg .grid{stroke:rgba(148,163,184,.14);stroke-width:1}
+.chart-svg .axis{fill:var(--muted);font-size:10px}
+.chart-svg .bar{fill:url(#chartBarGrad);opacity:.75;transition:opacity .15s}
+.chart-svg .bar:hover{opacity:1}
+.chart-svg .bar.best{opacity:1}
+.chart-svg .bar.today{fill:var(--green);opacity:1}
+.chart-svg .chart-area{fill:url(#chartAreaGrad);stroke:none}
+.chart-svg .chart-line{fill:none;stroke:#fbbf24;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.chart-svg .dot{fill:#fbbf24;stroke:#0c1524;stroke-width:1.5}
+.chart-svg .dot.best{fill:var(--amber-2)}
+.chart-svg .dot.today{fill:var(--green)}
+.chart-svg .val{fill:#c7d2e3;font-size:10px;font-weight:700}
+.chart-summary{display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:8px;font-size:12.5px;color:var(--muted)}
+.chart-summary strong{color:var(--text)}
+.chart-empty{padding:22px 8px;text-align:center;font-size:13px;color:var(--muted);line-height:1.6}
+.chart-empty strong{color:var(--text)}
+
 /* ---------- responsive ---------- */
 @media(max-width:900px){
   .auth-wrap{grid-template-columns:1fr}
@@ -525,6 +582,8 @@ body.modal-open{overflow:hidden}
   .session-head{gap:10px}
   .date-chip{width:43px;height:48px}
   .chip{font-size:11px}
+  .section-note{display:none}
+  .chart-controls .field{max-width:none;width:100%}
   .page-head{margin-bottom:20px}
   .hero-cta{padding:18px}
   .modal{padding:18px;max-height:calc(100vh - 20px)}
@@ -605,13 +664,31 @@ const ACTIVITIES = [
   ]}
 ];
 
+/* Pilihan data untuk grafik perkembangan atlet di sisi pelatih. */
+const CHART_METRICS = [
+  { key: 'sessions', label: 'Frekuensi latihan (sesi)', unit: 'sesi' },
+  { key: 'archery.arrows', label: 'Memanah · jumlah anak panah', unit: 'x', act: 'archery', field: 'arrows' },
+  { key: 'archery.hit', label: 'Memanah · masuk target', unit: 'x', act: 'archery', field: 'hit' },
+  { key: 'archery.points', label: 'Memanah · poin', unit: 'poin', act: 'archery', field: 'points' },
+  { key: 'run.km', label: 'Lari · jarak', unit: 'km', act: 'run', field: 'km' },
+  { key: 'run.minutes', label: 'Lari · durasi', unit: 'menit', act: 'run', field: 'minutes' },
+  { key: 'pushup.reps', label: 'Push-up · repetisi', unit: 'x', act: 'pushup', field: 'reps' },
+  { key: 'plank.seconds', label: 'Plank · durasi', unit: 'detik', act: 'plank', field: 'seconds' },
+  { key: 'lowplank.seconds', label: 'Low plank · durasi', unit: 'detik', act: 'lowplank', field: 'seconds' },
+  { key: 'sideplank.seconds', label: 'Side plank · durasi', unit: 'detik', act: 'sideplank', field: 'seconds' },
+  { key: 'weight.kg', label: 'Angkat beban · beban terberat', unit: 'kg', act: 'weight', field: 'kg', mode: 'max' },
+  { key: 'hang.seconds', label: 'Bergelantungan · durasi', unit: 'detik', act: 'hang', field: 'seconds' }
+];
+
 const state = {
   loginTab: 'login',
   view: 'home',
   athleteId: null,
   sessionDraft: null,
   modal: null,
-  filters: { athleteId: '', from: '', to: '' }
+  filters: { athleteId: '', from: '', to: '' },
+  chart: { metric: 'sessions', days: 14, type: 'line' },
+  showAllAttendance: false
 };
 
 const appEl = document.getElementById('app');
@@ -1676,11 +1753,13 @@ function quotaCard(athlete, opts){
 }
 function attendanceList(athleteId, opts){
   opts = opts || {};
-  const list = getAttendance()
+  const all = getAttendance()
     .filter(a => a.athleteId === athleteId)
     .sort(byDateDesc);
-  if (!list.length) return '<p class="muted" style="font-size:12.5px">Belum ada absensi tercatat.</p>';
-  return `<div class="att-list">${list.map(a => {
+  if (!all.length) return '<p class="muted" style="font-size:12.5px">Belum ada absensi tercatat.</p>';
+  const expanded = !!state.showAllAttendance;
+  const list = expanded ? all : all.slice(0, 5);
+  const rows = list.map(a => {
     const athlete = opts.showAthlete ? getUserById(a.athleteId) : null;
     const sesi = attendanceSessions(a);
     return `<div class="att-row">
@@ -1692,7 +1771,11 @@ function attendanceList(athleteId, opts){
       ${attendancePhotoThumb(a, 'Absensi ' + fmtDate(a.date))}
       ${opts.manage ? `<button type="button" class="btn btn-danger btn-xs" data-action="delete-attendance" data-id="${a.id}">Hapus</button>` : ''}
     </div>`;
-  }).join('')}</div>`;
+  }).join('');
+  const more = all.length > 5
+    ? `<button type="button" class="link-btn att-more" data-action="toggle-attendance">${expanded ? 'Tampilkan lebih sedikit' : 'Tampilkan semua (' + all.length + ')'}</button>`
+    : '';
+  return `<div class="att-list">${rows}</div>${more}`;
 }
 function packageList(athleteId, opts){
   opts = opts || {};
@@ -1765,7 +1848,9 @@ function readProfileExtra(fd){
   if (phone.length > 30) return { error: 'No. HP maksimal 30 karakter.' };
   const address = String(fd.get('address') || '').trim();
   if (address.length > 200) return { error: 'Alamat maksimal 200 karakter.' };
-  return { birthDate, startDate, phone, address };
+  const school = String(fd.get('school') || '').trim();
+  if (school.length > 120) return { error: 'Nama sekolah maksimal 120 karakter.' };
+  return { birthDate, startDate, phone, address, school };
 }
 
 /* ================= auth screens ================= */
@@ -1909,6 +1994,10 @@ function registerForm(){
     <div class="field">
       <label for="reg-address">Alamat <span class="unit">(opsional)</span></label>
       <input id="reg-address" name="address" placeholder="Kota / alamat singkat">
+    </div>
+    <div class="field">
+      <label for="reg-school">Sekolah <span class="unit">(opsional)</span></label>
+      <input id="reg-school" name="school" placeholder="Contoh: SMP Negeri 1 Yogyakarta">
     </div>
     <div class="field">
       <label for="reg-coach">Pelatih</label>
@@ -2084,6 +2173,166 @@ function sessionCard(s, opts){
   </article>`;
 }
 
+/* ================= grafik perkembangan ================= */
+function chartValueForSession(s, def){
+  if (!def || def.key === 'sessions') return 1;
+  const entry = s.entries && s.entries[def.act];
+  return Number(entry && entry[def.field]) || 0;
+}
+function chartBuildSeries(athleteId, def, days){
+  const sessions = getSessions().filter(s => s.athleteId === athleteId);
+  const byDate = new Map();
+  sessions.forEach(s => {
+    if (!s.date) return;
+    const v = chartValueForSession(s, def);
+    const before = byDate.has(s.date) ? byDate.get(s.date) : 0;
+    byDate.set(s.date, def.mode === 'max' ? Math.max(before, v) : before + v);
+  });
+  const points = [];
+  const now = new Date();
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i);
+    const iso = d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+    points.push({
+      iso,
+      day: d.getDate(),
+      month: d.getMonth() + 1,
+      value: byDate.get(iso) || 0
+    });
+  }
+  return points;
+}
+function chartSvgMarkup(points, def, kind){
+  const line = kind === 'line';
+  const W = 380, H = 158;
+  const padL = 34, padR = 10, padT = 16, padB = 26;
+  const plotW = W - padL - padR;
+  const plotH = H - padT - padB;
+  const baseY = padT + plotH;
+  const n = points.length;
+  const maxVal = Math.max(...points.map(p => p.value), 0);
+  const top = maxVal > 0 ? maxVal : 1;
+  const slot = plotW / n;
+  const barW = Math.max(3, Math.min(28, slot * 0.6));
+  const labelStep = n <= 7 ? 1 : (n <= 14 ? 2 : 5);
+  const bestIndex = points.findIndex(p => p.value === maxVal);
+  const today = todayISO();
+  const cx = i => padL + slot * i + slot / 2;
+  const cy = v => padT + plotH * (1 - v / top);
+
+  const grid = [0, 0.5, 1].map(frac => {
+    const y = padT + plotH * (1 - frac);
+    const val = frac === 0 ? 0 : top * frac;
+    const label = (frac === 0.5 && top < 2)
+      ? ''
+      : `<text class="axis" x="${padL - 6}" y="${(y + 3).toFixed(2)}" text-anchor="end">${esc(formatNum(Math.round(val * 100) / 100))}</text>`;
+    return `<line class="grid" x1="${padL}" y1="${y.toFixed(2)}" x2="${W - padR}" y2="${y.toFixed(2)}"/>${label}`;
+  }).join('');
+
+  let marks = '';
+  if (line) {
+    const coords = points.map((p, i) => [cx(i), cy(p.value)]);
+    const path = coords.map((c, i) => (i ? 'L' : 'M') + c[0].toFixed(2) + ',' + c[1].toFixed(2)).join(' ');
+    const area = path + ` L ${coords[n - 1][0].toFixed(2)},${baseY.toFixed(2)} L ${coords[0][0].toFixed(2)},${baseY.toFixed(2)} Z`;
+    const dots = points.map((p, i) => {
+      if (!(p.value > 0) && p.iso !== today) return '';
+      const isBest = i === bestIndex && p.value > 0;
+      const isToday = p.iso === today;
+      const cls = 'dot' + (isBest ? ' best' : '') + (isToday ? ' today' : '');
+      return `<circle class="${cls}" cx="${cx(i).toFixed(2)}" cy="${cy(p.value).toFixed(2)}" r="${isToday ? 3.4 : 2.6}">
+        <title>${esc(fmtDateShort(p.iso))}: ${esc(formatNum(p.value))} ${esc(def.unit)}</title>
+      </circle>`;
+    }).join('');
+    const labels = n <= 7
+      ? points.map((p, i) => p.value > 0
+        ? `<text class="val" x="${cx(i).toFixed(2)}" y="${(cy(p.value) - 7).toFixed(2)}" text-anchor="middle">${esc(formatNum(p.value))}</text>`
+        : '').join('')
+      : '';
+    marks = `<path class="chart-area" d="${area}"></path>
+      <path class="chart-line" d="${path}"></path>${dots}${labels}`;
+  } else {
+    marks = points.map((p, i) => {
+      const x = padL + slot * i + (slot - barW) / 2;
+      const y = cy(p.value);
+      const isBest = i === bestIndex && p.value > 0;
+      const isToday = p.iso === today;
+      const cls = 'bar' + (isBest ? ' best' : '') + (isToday ? ' today' : '');
+      const label = n <= 7 && p.value > 0
+        ? `<text class="val" x="${cx(i).toFixed(2)}" y="${(y - 5).toFixed(2)}" text-anchor="middle">${esc(formatNum(p.value))}</text>`
+        : '';
+      return `<rect class="${cls}" x="${x.toFixed(2)}" y="${y.toFixed(2)}" width="${barW.toFixed(2)}" height="${Math.max(baseY - y, 0).toFixed(2)}" rx="${Math.min(5, barW / 2).toFixed(2)}">
+        <title>${esc(fmtDateShort(p.iso))}: ${esc(formatNum(p.value))} ${esc(def.unit)}</title>
+      </rect>${label}`;
+    }).join('');
+  }
+
+  const xLabels = points.map((p, i) => {
+    if (i !== n - 1 && i % labelStep !== 0) return '';
+    return `<text class="axis" x="${cx(i).toFixed(2)}" y="${H - 8}" text-anchor="middle">${p.day}/${p.month}</text>`;
+  }).join('');
+
+  return `<svg class="chart-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="Grafik ${line ? 'garis' : 'batang'} ${esc(def.label)}">
+    <defs>
+      <linearGradient id="chartBarGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#fbbf24"/>
+        <stop offset="100%" stop-color="#b45309"/>
+      </linearGradient>
+      <linearGradient id="chartAreaGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#f5a524" stop-opacity="0.34"/>
+        <stop offset="100%" stop-color="#f5a524" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    ${grid}
+    ${marks}
+    ${xLabels}
+  </svg>`;
+}
+function athleteChartSection(athleteId){
+  const cfg = state.chart || (state.chart = { metric: 'sessions', days: 14, type: 'line' });
+  const def = CHART_METRICS.find(m => m.key === cfg.metric) || CHART_METRICS[0];
+  const days = [7, 14, 30].indexOf(cfg.days) >= 0 ? cfg.days : 14;
+  const kind = cfg.type === 'bar' ? 'bar' : 'line';
+  const points = chartBuildSeries(athleteId, def, days);
+  const total = points.reduce((acc, p) => acc + p.value, 0);
+  const activeDays = points.filter(p => p.value > 0).length;
+  const best = points.reduce((acc, p) => (p.value > acc.value ? p : acc), points[0]);
+  const hasData = total > 0;
+  return `
+  <section class="section">
+    <div class="section-head">
+      <h2>Grafik perkembangan</h2>
+      <span class="muted" style="font-size:12.5px">${days} hari terakhir</span>
+    </div>
+    <div class="card chart-card">
+      <div class="chart-controls">
+        <div class="field">
+          <label for="chart-metric">Data yang ditampilkan</label>
+          <select id="chart-metric" data-chart-metric>
+            ${CHART_METRICS.map(m => `<option value="${m.key}" ${m.key === def.key ? 'selected' : ''}>${esc(m.label)}</option>`).join('')}
+          </select>
+        </div>
+        <div class="chart-toolbar">
+          <div class="chart-type" role="group" aria-label="Jenis grafik">
+            <button type="button" class="chart-range-btn ${kind === 'line' ? 'active' : ''}" data-action="chart-type" data-type="line" title="Grafik garis">📈 Garis</button>
+            <button type="button" class="chart-range-btn ${kind === 'bar' ? 'active' : ''}" data-action="chart-type" data-type="bar" title="Grafik batang">📊 Batang</button>
+          </div>
+          <div class="chart-range" role="group" aria-label="Rentang grafik">
+            ${[7, 14, 30].map(d => `<button type="button" class="chart-range-btn ${d === days ? 'active' : ''}" data-action="chart-range" data-days="${d}">${d} hari</button>`).join('')}
+          </div>
+        </div>
+      </div>
+      ${hasData
+        ? chartSvgMarkup(points, def, kind) + `
+          <div class="chart-summary">
+            <span>Total <strong>${esc(formatNum(total))}</strong> ${esc(def.unit)}</span>
+            <span>Hari latihan <strong>${activeDays}</strong> dari ${days} hari</span>
+            <span>Terbaik <strong>${esc(formatNum(best.value))}</strong> ${esc(def.unit)} (${esc(fmtDateShort(best.iso))})</span>
+          </div>`
+        : `<div class="chart-empty">Belum ada data <strong>${esc(def.label.toLowerCase())}</strong> dalam ${days} hari terakhir. Coba pilih data lain atau rentang yang lebih panjang.</div>`}
+    </div>
+  </section>`;
+}
+
 /* ================= coach home ================= */
 function coachHome(user){
   const athletes = getUsers().filter(u => u.role === 'athlete' && u.coachId === user.id);
@@ -2093,7 +2342,12 @@ function coachHome(user){
   const weekCount = sessions.filter(s => isThisWeek(s.date)).length;
   const todayCount = sessions.filter(s => s.date === todayISO()).length;
   const commentCount = getComments().filter(c => allSessions.some(s => s.id === c.sessionId)).length;
-  const recent = sessions.slice(0, 5);
+  // Satu sesi terakhir per atlet, lalu ambil maksimal 5 agar halaman tetap ringkas di HP.
+  const recent = athletes
+    .map(a => sessions.find(s => s.athleteId === a.id))
+    .filter(Boolean)
+    .sort(byDateDesc)
+    .slice(0, 5);
   const lowQuota = athletes.filter(a => {
     const q = quotaSummary(a.id);
     return q.remaining <= 2 && (q.purchased > 0 || q.remaining < 0);
@@ -2124,6 +2378,7 @@ function coachHome(user){
   <section class="section">
     <div class="section-head">
       <h2>Aktivitas terbaru</h2>
+      <span class="muted section-note" style="font-size:12.5px">1 sesi terakhir per atlet</span>
       <button type="button" class="link-btn" data-action="nav" data-view="sessions">Lihat semua →</button>
     </div>
     ${recent.length
@@ -2192,6 +2447,8 @@ function athleteHome(user){
     </div>
     <button type="button" class="btn btn-primary" data-action="new-session">＋ Catat Latihan</button>
   </div>
+
+  ${athleteChartSection(user.id)}
 
   <section class="section">
     <div class="section-head">
@@ -2294,6 +2551,7 @@ function coachAthleteView(user){
           <div class="kv"><span>Total pertemuan</span><strong>${formatNum(totalMeetings)} x pertemuan</strong></div>
           <div class="kv"><span>No. HP</span><strong>${athlete.phone ? esc(athlete.phone) : '-'}</strong></div>
           <div class="kv"><span>Alamat</span><strong>${athlete.address ? esc(athlete.address) : '-'}</strong></div>
+          <div class="kv"><span>Sekolah</span><strong>${athlete.school ? esc(athlete.school) : '-'}</strong></div>
         </div>
       </div>
     </div>
@@ -2308,6 +2566,8 @@ function coachAthleteView(user){
     <div class="section-head"><h2>Target latihan</h2></div>
     ${target ? targetCard(target, latest, { editable: true }) : emptyTargetCard(athlete.id)}
   </section>
+
+  ${athleteChartSection(athlete.id)}
 
   <section class="section">
     <div class="section-head"><h2>Kuota & absensi</h2><span class="muted" style="font-size:12.5px">${quota.used} pertemuan hadir</span></div>
@@ -2610,7 +2870,8 @@ function profileView(user){
            <div class="kv"><span>Sudah latihan</span><strong>${duration ? esc(duration.text) : '-'}</strong></div>
            <div class="kv"><span>Total pertemuan</span><strong>${formatNum(totalMeetings)} x pertemuan</strong></div>
            <div class="kv"><span>No. HP</span><strong>${user.phone ? esc(user.phone) : '-'}</strong></div>
-           <div class="kv"><span>Alamat</span><strong>${user.address ? esc(user.address) : '-'}</strong></div>`}
+           <div class="kv"><span>Alamat</span><strong>${user.address ? esc(user.address) : '-'}</strong></div>
+           <div class="kv"><span>Sekolah</span><strong>${user.school ? esc(user.school) : '-'}</strong></div>`}
       <div class="kv"><span>Penyimpanan</span><strong>Lokal di browser ini</strong></div>
     </div>
 
@@ -2865,6 +3126,10 @@ function athleteFormModal(user){
           <label for="ath-address">Alamat <span class="unit">(opsional)</span></label>
           <input id="ath-address" name="address" placeholder="Kota / alamat singkat">
         </div>
+        <div class="field">
+          <label for="ath-school">Sekolah <span class="unit">(opsional)</span></label>
+          <input id="ath-school" name="school" placeholder="Contoh: SMP Negeri 1 Yogyakarta">
+        </div>
         <div class="form-error" hidden></div>
         <div class="form-actions">
           <button type="button" class="btn btn-ghost" data-action="close-modal">Batal</button>
@@ -3043,6 +3308,10 @@ function profileModal(user){
         <div class="field">
           <label for="prof-address">Alamat <span class="unit">(opsional)</span></label>
           <input id="prof-address" name="address" value="${esc(user.address || '')}" placeholder="Kota / alamat singkat">
+        </div>
+        <div class="field">
+          <label for="prof-school">Sekolah <span class="unit">(opsional)</span></label>
+          <input id="prof-school" name="school" value="${esc(user.school || '')}" placeholder="Contoh: SMP Negeri 1 Yogyakarta">
         </div>` : ''}
         <p class="form-hint">Username tidak dapat diubah. Data diri hanya terlihat olehmu dan coach-mu.</p>
         <div class="form-error" hidden></div>
@@ -3176,6 +3445,7 @@ document.addEventListener('click', (e) => {
       if (user.role !== 'coach') return;
       state.view = 'athlete';
       state.athleteId = el.dataset.id;
+      state.showAllAttendance = false;
       state.modal = null;
       render();
       scrollTop();
@@ -3363,6 +3633,23 @@ document.addEventListener('click', (e) => {
       if (input) input.click();
       return;
     }
+    case 'toggle-attendance':
+      state.showAllAttendance = !state.showAllAttendance;
+      render();
+      return;
+    case 'chart-type': {
+      const type = el.dataset.type === 'bar' ? 'bar' : 'line';
+      state.chart.type = type;
+      render();
+      return;
+    }
+    case 'chart-range': {
+      const days = Number(el.dataset.days);
+      if ([7, 14, 30].indexOf(days) < 0) return;
+      state.chart.days = days;
+      render();
+      return;
+    }
     case 'reset-filters':
       state.filters = { athleteId: '', from: '', to: '' };
       render();
@@ -3408,6 +3695,14 @@ document.addEventListener('keydown', (e) => {
 }, true);
 
 document.addEventListener('change', (e) => {
+  if (e.target && e.target.matches && e.target.matches('[data-chart-metric]')) {
+    const metric = e.target.value;
+    if (CHART_METRICS.some(m => m.key === metric)) {
+      state.chart.metric = metric;
+      render();
+    }
+    return;
+  }
   const toggle = e.target.closest ? e.target.closest('[data-activity-toggle]') : null;
   if (toggle) {
     const card = toggle.closest('.activity');
@@ -3561,7 +3856,7 @@ async function handleRegister(form){
     const athlete = {
       id: uid(), name, username, pwHash: await hashPassword(pw),
       role: 'athlete', coachId, createdAt: Date.now(),
-      birthDate: extra.birthDate, startDate: extra.startDate, phone: extra.phone, address: extra.address
+      birthDate: extra.birthDate, startDate: extra.startDate, phone: extra.phone, address: extra.address, school: extra.school
     };
     users.push(athlete);
     saveUsers(users);
@@ -3599,7 +3894,7 @@ async function handleAthleteCreate(form){
     const athlete = {
       id: uid(), name, username, pwHash: await hashPassword(pw),
       role: 'athlete', coachId: user.id, createdAt: Date.now(),
-      birthDate: extra.birthDate, startDate: extra.startDate, phone: extra.phone, address: extra.address
+      birthDate: extra.birthDate, startDate: extra.startDate, phone: extra.phone, address: extra.address, school: extra.school
     };
     users.push(athlete);
     saveUsers(users);
@@ -3817,7 +4112,8 @@ function handleProfileSave(form){
     birthDate: user.birthDate || '',
     startDate: user.startDate || '',
     phone: user.phone || '',
-    address: user.address || ''
+    address: user.address || '',
+    school: user.school || ''
   };
   if (user.role === 'athlete') {
     const parsed = readProfileExtra(fd);
@@ -3832,7 +4128,8 @@ function handleProfileSave(form){
     birthDate: extra.birthDate,
     startDate: extra.startDate,
     phone: extra.phone,
-    address: extra.address
+    address: extra.address,
+    school: extra.school
   });
   saveUsers(users);
   state.modal = null;
